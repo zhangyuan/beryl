@@ -16,6 +16,10 @@
 
 ### 启动待测试网站
 
+### 启动selenium server
+
+    java -jar selenium-server-standalone-2.48.2.jar
+
 从命令行进入 ./public 目录，执行 
     
     python -m SimpleHTTPServer
@@ -28,4 +32,4 @@
 
 # 文档
 
-docs 目录下有 behave 和 selenium 文档。
+docs 目录下有 behave 和 selenium 文档。文档从对应的源码生成。
