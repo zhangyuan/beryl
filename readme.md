@@ -14,11 +14,11 @@
 
 ## 运行测试
 
-### 启动待测试网站
-
 ### 启动selenium server
 
     java -jar selenium-server-standalone-2.48.2.jar
+
+### 启动待测试网站
 
 从命令行进入 ./public 目录，执行 
     
