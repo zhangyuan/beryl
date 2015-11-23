@@ -1,0 +1,797 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Using behave &mdash; behave 1.2.6.dev0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/flasky.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.2.6.dev0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="behave 1.2.6.dev0 documentation" href="index.html" />
+    <link rel="next" title="Behave API Reference" href="api.html" />
+    <link rel="prev" title="Feature Testing Setup" href="gherkin.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="api.html" title="Behave API Reference"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="gherkin.html" title="Feature Testing Setup"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">behave 1.2.6.dev0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="using-behave">
+<h1>Using <em>behave</em><a class="headerlink" href="#using-behave" title="Permalink to this headline">¶</a></h1>
+<p>The command-line tool <em>behave</em> has a bunch of <a class="reference internal" href="#command-line-arguments">command-line arguments</a> and is
+also configurable using <a class="reference internal" href="#configuration-files">configuration files</a>.</p>
+<p>Values defined in the configuration files are used as defaults which the
+command-line arguments may override.</p>
+<div class="section" id="command-line-arguments">
+<h2>Command-Line Arguments<a class="headerlink" href="#command-line-arguments" title="Permalink to this headline">¶</a></h2>
+<p>You may see the same information presented below at any time using <tt class="docutils literal"><span class="pre">behave</span>
+<span class="pre">-h</span></tt>.</p>
+<dl class="option">
+<dt id="cmdoption-c">
+<span id="cmdoption--no-color"></span><tt class="descname">-c</tt><tt class="descclassname"></tt><tt class="descclassname">, </tt><tt class="descname">--no-color</tt><tt class="descclassname"></tt><a class="headerlink" href="#cmdoption-c" title="Permalink to this definition">¶</a></dt>
+<dd><p>Disable the use of ANSI color escapes.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption--color">
+<tt class="descname">--color</tt><tt class="descclassname"></tt><a class="headerlink" href="#cmdoption--color" title="Permalink to this definition">¶</a></dt>
+<dd><p>Use ANSI color escapes. This is the default behaviour. This switch is
+used to override a configuration file setting.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-d">
+<span id="cmdoption--dry-run"></span><tt class="descname">-d</tt><tt class="descclassname"></tt><tt class="descclassname">, </tt><tt class="descname">--dry-run</tt><tt class="descclassname"></tt><a class="headerlink" href="#cmdoption-d" title="Permalink to this definition">¶</a></dt>
+<dd><p>Invokes formatters without executing the steps.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-D">
+<span id="cmdoption--define"></span><tt class="descname">-D</tt><tt class="descclassname"></tt><tt class="descclassname">, </tt><tt class="descname">--define</tt><tt class="descclassname"></tt><a class="headerlink" href="#cmdoption-D" title="Permalink to this definition">¶</a></dt>
+<dd><p>Define user-specific data for the config.userdata dictionary. Example:
+-D foo=bar to store it in config.userdata[&#8220;foo&#8221;].</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-e">
+<span id="cmdoption--exclude"></span><tt class="descname">-e</tt><tt class="descclassname"></tt><tt class="descclassname">, </tt><tt class="descname">--exclude</tt><tt class="descclassname"></tt><a class="headerlink" href="#cmdoption-e" title="Permalink to this definition">¶</a></dt>
+<dd><p>Don&#8217;t run feature files matching regular expression PATTERN.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-i">
+<span id="cmdoption--include"></span><tt class="descname">-i</tt><tt class="descclassname"></tt><tt class="descclassname">, </tt><tt class="descname">--include</tt><tt class="descclassname"></tt><a class="headerlink" href="#cmdoption-i" title="Permalink to this definition">¶</a></dt>
+<dd><p>Only run feature files matching regular expression PATTERN.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption--no-junit">
+<tt class="descname">--no-junit</tt><tt class="descclassname"></tt><a class="headerlink" href="#cmdoption--no-junit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Don&#8217;t output JUnit-compatible reports.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption--junit">
+<tt class="descname">--junit</tt><tt class="descclassname"></tt><a class="headerlink" href="#cmdoption--junit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Output JUnit-compatible reports. When junit is enabled, all stdout and
+stderr will be redirected and dumped to the junit report,
+regardless of the &#8216;&#8211;capture&#8217; and &#8216;&#8211;no-capture&#8217; options.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption--junit-directory">
+<tt class="descname">--junit-directory</tt><tt class="descclassname"></tt><a class="headerlink" href="#cmdoption--junit-directory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Directory in which to store JUnit reports.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-f">
+<span id="cmdoption--format"></span><tt class="descname">-f</tt><tt class="descclassname"></tt><tt class="descclassname">, </tt><tt class="descname">--format</tt><tt class="descclassname"></tt><a class="headerlink" href="#cmdoption-f" title="Permalink to this definition">¶</a></dt>
+<dd><p>Specify a formatter. If none is specified the default formatter is
+used. Pass &#8216;&#8211;format help&#8217; to get a list of available formatters.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption--steps-catalog">
+<tt class="descname">--steps-catalog</tt><tt class="descclassname"></tt><a class="headerlink" href="#cmdoption--steps-catalog" title="Permalink to this definition">¶</a></dt>
+<dd><p>Show a catalog of all available step definitions. SAME AS:
+&#8211;format=steps.catalog &#8211;dry-run &#8211;no-summary -q</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-k">
+<span id="cmdoption--no-skipped"></span><tt class="descname">-k</tt><tt class="descclassname"></tt><tt class="descclassname">, </tt><tt class="descname">--no-skipped</tt><tt class="descclassname"></tt><a class="headerlink" href="#cmdoption-k" title="Permalink to this definition">¶</a></dt>
+<dd><p>Don&#8217;t print skipped steps (due to tags).</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption--show-skipped">
+<tt class="descname">--show-skipped</tt><tt class="descclassname"></tt><a class="headerlink" href="#cmdoption--show-skipped" title="Permalink to this definition">¶</a></dt>
+<dd><p>Print skipped steps. This is the default behaviour. This switch is
+used to override a configuration file setting.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption--no-snippets">
+<tt class="descname">--no-snippets</tt><tt class="descclassname"></tt><a class="headerlink" href="#cmdoption--no-snippets" title="Permalink to this definition">¶</a></dt>
+<dd><p>Don&#8217;t print snippets for unimplemented steps.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption--snippets">
+<tt class="descname">--snippets</tt><tt class="descclassname"></tt><a class="headerlink" href="#cmdoption--snippets" title="Permalink to this definition">¶</a></dt>
+<dd><p>Print snippets for unimplemented steps. This is the default behaviour.
+This switch is used to override a configuration file setting.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-m">
+<span id="cmdoption--no-multiline"></span><tt class="descname">-m</tt><tt class="descclassname"></tt><tt class="descclassname">, </tt><tt class="descname">--no-multiline</tt><tt class="descclassname"></tt><a class="headerlink" href="#cmdoption-m" title="Permalink to this definition">¶</a></dt>
+<dd><p>Don&#8217;t print multiline strings and tables under steps.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption--multiline">
+<tt class="descname">--multiline</tt><tt class="descclassname"></tt><a class="headerlink" href="#cmdoption--multiline" title="Permalink to this definition">¶</a></dt>
+<dd><p>Print multiline strings and tables under steps. This is the default
+behaviour. This switch is used to override a configuration file
+setting.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-n">
+<span id="cmdoption--name"></span><tt class="descname">-n</tt><tt class="descclassname"></tt><tt class="descclassname">, </tt><tt class="descname">--name</tt><tt class="descclassname"></tt><a class="headerlink" href="#cmdoption-n" title="Permalink to this definition">¶</a></dt>
+<dd><p>Only execute the feature elements which match part of the given name.
+If this option is given more than once, it will match against all
+the given names.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption--no-capture">
+<tt class="descname">--no-capture</tt><tt class="descclassname"></tt><a class="headerlink" href="#cmdoption--no-capture" title="Permalink to this definition">¶</a></dt>
+<dd><p>Don&#8217;t capture stdout (any stdout output will be printed immediately.)</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption--capture">
+<tt class="descname">--capture</tt><tt class="descclassname"></tt><a class="headerlink" href="#cmdoption--capture" title="Permalink to this definition">¶</a></dt>
+<dd><p>Capture stdout (any stdout output will be printed if there is a
+failure.) This is the default behaviour. This switch is used to
+override a configuration file setting.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption--no-capture-stderr">
+<tt class="descname">--no-capture-stderr</tt><tt class="descclassname"></tt><a class="headerlink" href="#cmdoption--no-capture-stderr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Don&#8217;t capture stderr (any stderr output will be printed immediately.)</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption--capture-stderr">
+<tt class="descname">--capture-stderr</tt><tt class="descclassname"></tt><a class="headerlink" href="#cmdoption--capture-stderr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Capture stderr (any stderr output will be printed if there is a
+failure.) This is the default behaviour. This switch is used to
+override a configuration file setting.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption--no-logcapture">
+<tt class="descname">--no-logcapture</tt><tt class="descclassname"></tt><a class="headerlink" href="#cmdoption--no-logcapture" title="Permalink to this definition">¶</a></dt>
+<dd><p>Don&#8217;t capture logging. Logging configuration will be left intact.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption--logcapture">
+<tt class="descname">--logcapture</tt><tt class="descclassname"></tt><a class="headerlink" href="#cmdoption--logcapture" title="Permalink to this definition">¶</a></dt>
+<dd><p>Capture logging. All logging during a step will be captured and
+displayed in the event of a failure. This is the default
+behaviour. This switch is used to override a configuration file
+setting.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption--logging-level">
+<tt class="descname">--logging-level</tt><tt class="descclassname"></tt><a class="headerlink" href="#cmdoption--logging-level" title="Permalink to this definition">¶</a></dt>
+<dd><p>Specify a level to capture logging at. The default is INFO - capturing
+everything.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption--logging-format">
+<tt class="descname">--logging-format</tt><tt class="descclassname"></tt><a class="headerlink" href="#cmdoption--logging-format" title="Permalink to this definition">¶</a></dt>
+<dd><p>Specify custom format to print statements. Uses the same format as
+used by standard logging handlers. The default is
+&#8216;%(levelname)s:%(name)s:%(message)s&#8217;.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption--logging-datefmt">
+<tt class="descname">--logging-datefmt</tt><tt class="descclassname"></tt><a class="headerlink" href="#cmdoption--logging-datefmt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Specify custom date/time format to print statements. Uses the same
+format as used by standard logging handlers.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption--logging-filter">
+<tt class="descname">--logging-filter</tt><tt class="descclassname"></tt><a class="headerlink" href="#cmdoption--logging-filter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Specify which statements to filter in/out. By default, everything is
+captured. If the output is too verbose, use this option to filter
+out needless output. Example: &#8211;logging-filter=foo will capture
+statements issued ONLY to foo or foo.what.ever.sub but not foobar
+or other logger. Specify multiple loggers with comma:
+filter=foo,bar,baz. If any logger name is prefixed with a minus,
+eg filter=-foo, it will be excluded rather than included.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption--logging-clear-handlers">
+<tt class="descname">--logging-clear-handlers</tt><tt class="descclassname"></tt><a class="headerlink" href="#cmdoption--logging-clear-handlers" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clear all other logging handlers.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption--no-summary">
+<tt class="descname">--no-summary</tt><tt class="descclassname"></tt><a class="headerlink" href="#cmdoption--no-summary" title="Permalink to this definition">¶</a></dt>
+<dd><p>Don&#8217;t display the summary at the end of the run.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption--summary">
+<tt class="descname">--summary</tt><tt class="descclassname"></tt><a class="headerlink" href="#cmdoption--summary" title="Permalink to this definition">¶</a></dt>
+<dd><p>Display the summary at the end of the run.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-o">
+<span id="cmdoption--outfile"></span><tt class="descname">-o</tt><tt class="descclassname"></tt><tt class="descclassname">, </tt><tt class="descname">--outfile</tt><tt class="descclassname"></tt><a class="headerlink" href="#cmdoption-o" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write to specified file instead of stdout.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-q">
+<span id="cmdoption--quiet"></span><tt class="descname">-q</tt><tt class="descclassname"></tt><tt class="descclassname">, </tt><tt class="descname">--quiet</tt><tt class="descclassname"></tt><a class="headerlink" href="#cmdoption-q" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for &#8211;no-snippets &#8211;no-source.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-s">
+<span id="cmdoption--no-source"></span><tt class="descname">-s</tt><tt class="descclassname"></tt><tt class="descclassname">, </tt><tt class="descname">--no-source</tt><tt class="descclassname"></tt><a class="headerlink" href="#cmdoption-s" title="Permalink to this definition">¶</a></dt>
+<dd><p>Don&#8217;t print the file and line of the step definition with the steps.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption--show-source">
+<tt class="descname">--show-source</tt><tt class="descclassname"></tt><a class="headerlink" href="#cmdoption--show-source" title="Permalink to this definition">¶</a></dt>
+<dd><p>Print the file and line of the step definition with the steps. This is
+the default behaviour. This switch is used to override a
+configuration file setting.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption--stage">
+<tt class="descname">--stage</tt><tt class="descclassname"></tt><a class="headerlink" href="#cmdoption--stage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines the current test stage. The test stage name is used as name
+prefix for the environment file and the steps directory (instead
+of default path names).</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption--stop">
+<tt class="descname">--stop</tt><tt class="descclassname"></tt><a class="headerlink" href="#cmdoption--stop" title="Permalink to this definition">¶</a></dt>
+<dd><p>Stop running tests at the first failure.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-t">
+<span id="cmdoption--tags"></span><tt class="descname">-t</tt><tt class="descclassname"></tt><tt class="descclassname">, </tt><tt class="descname">--tags</tt><tt class="descclassname"></tt><a class="headerlink" href="#cmdoption-t" title="Permalink to this definition">¶</a></dt>
+<dd><p>Only execute features or scenarios with tags matching TAG_EXPRESSION.
+Pass &#8216;&#8211;tags-help&#8217; for more information.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-T">
+<span id="cmdoption--no-timings"></span><tt class="descname">-T</tt><tt class="descclassname"></tt><tt class="descclassname">, </tt><tt class="descname">--no-timings</tt><tt class="descclassname"></tt><a class="headerlink" href="#cmdoption-T" title="Permalink to this definition">¶</a></dt>
+<dd><p>Don&#8217;t print the time taken for each step.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption--show-timings">
+<tt class="descname">--show-timings</tt><tt class="descclassname"></tt><a class="headerlink" href="#cmdoption--show-timings" title="Permalink to this definition">¶</a></dt>
+<dd><p>Print the time taken, in seconds, of each step after the step has
+completed. This is the default behaviour. This switch is used to
+override a configuration file setting.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-v">
+<span id="cmdoption--verbose"></span><tt class="descname">-v</tt><tt class="descclassname"></tt><tt class="descclassname">, </tt><tt class="descname">--verbose</tt><tt class="descclassname"></tt><a class="headerlink" href="#cmdoption-v" title="Permalink to this definition">¶</a></dt>
+<dd><p>Show the files and features loaded.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-w">
+<span id="cmdoption--wip"></span><tt class="descname">-w</tt><tt class="descclassname"></tt><tt class="descclassname">, </tt><tt class="descname">--wip</tt><tt class="descclassname"></tt><a class="headerlink" href="#cmdoption-w" title="Permalink to this definition">¶</a></dt>
+<dd><p>Only run scenarios tagged with &#8220;wip&#8221;. Additionally: use the &#8220;plain&#8221;
+formatter, do not capture stdout or logging output and stop at the
+first failure.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption-x">
+<span id="cmdoption--expand"></span><tt class="descname">-x</tt><tt class="descclassname"></tt><tt class="descclassname">, </tt><tt class="descname">--expand</tt><tt class="descclassname"></tt><a class="headerlink" href="#cmdoption-x" title="Permalink to this definition">¶</a></dt>
+<dd><p>Expand scenario outline tables in output.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption--lang">
+<tt class="descname">--lang</tt><tt class="descclassname"></tt><a class="headerlink" href="#cmdoption--lang" title="Permalink to this definition">¶</a></dt>
+<dd><p>Use keywords for a language other than English.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption--lang-list">
+<tt class="descname">--lang-list</tt><tt class="descclassname"></tt><a class="headerlink" href="#cmdoption--lang-list" title="Permalink to this definition">¶</a></dt>
+<dd><p>List the languages available for &#8211;lang.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption--lang-help">
+<tt class="descname">--lang-help</tt><tt class="descclassname"></tt><a class="headerlink" href="#cmdoption--lang-help" title="Permalink to this definition">¶</a></dt>
+<dd><p>List the translations accepted for one language.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption--tags-help">
+<tt class="descname">--tags-help</tt><tt class="descclassname"></tt><a class="headerlink" href="#cmdoption--tags-help" title="Permalink to this definition">¶</a></dt>
+<dd><p>Show help for tag expressions.</p>
+</dd></dl>
+
+<dl class="option">
+<dt id="cmdoption--version">
+<tt class="descname">--version</tt><tt class="descclassname"></tt><a class="headerlink" href="#cmdoption--version" title="Permalink to this definition">¶</a></dt>
+<dd><p>Show version.</p>
+</dd></dl>
+
+<div class="section" id="tag-expression">
+<h3>Tag Expression<a class="headerlink" href="#tag-expression" title="Permalink to this headline">¶</a></h3>
+<p>Scenarios inherit tags declared on the Feature level. The simplest
+TAG_EXPRESSION is simply a tag:</p>
+<div class="highlight-python"><div class="highlight"><pre>--tags @dev
+</pre></div>
+</div>
+<p>You may even leave off the &#8220;&#64;&#8221; - behave doesn&#8217;t mind.</p>
+<p>When a tag in a tag expression starts with a ~, this represents boolean NOT:</p>
+<div class="highlight-python"><div class="highlight"><pre>--tags ~@dev
+</pre></div>
+</div>
+<p>A tag expression can have several tags separated by a comma, which represents
+logical OR:</p>
+<div class="highlight-python"><div class="highlight"><pre>--tags @dev,@wip
+</pre></div>
+</div>
+<p>The &#8211;tags option can be specified several times, and this represents logical
+AND, for instance this represents the boolean expression
+&#8220;(&#64;foo or not &#64;bar) and &#64;zap&#8221;:</p>
+<div class="highlight-python"><div class="highlight"><pre>--tags @foo,~@bar --tags @zap.
+</pre></div>
+</div>
+<p>Beware that if you want to use several negative tags to exclude several tags
+you have to use logical AND:</p>
+<div class="highlight-python"><div class="highlight"><pre>--tags ~@fixme --tags ~@buggy.
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="configuration-files">
+<h2>Configuration Files<a class="headerlink" href="#configuration-files" title="Permalink to this headline">¶</a></h2>
+<p>Configuration files for <em>behave</em> are called either &#8221;.behaverc&#8221;,
+&#8220;behave.ini&#8221; or &#8220;setup.cfg&#8221; (your preference) and are located in one of
+three places:</p>
+<ol class="arabic simple">
+<li>the current working directory (good for per-project settings),</li>
+<li>your home directory ($HOME), or</li>
+<li>on Windows, in the %APPDATA% directory.</li>
+</ol>
+<p>If you are wondering where <em>behave</em> is getting its configuration defaults
+from you can use the &#8220;-v&#8221; command-line argument and it&#8217;ll tell you.</p>
+<p>Configuration files <strong>must</strong> start with the label &#8220;[behave]&#8221; and are
+formatted in the Windows INI style, for example:</p>
+<div class="highlight-ini"><div class="highlight"><pre><span class="k">[behave]</span>
+<span class="na">format</span><span class="o">=</span><span class="s">plain</span>
+<span class="na">logging_clear_handlers</span><span class="o">=</span><span class="s">yes</span>
+<span class="na">logging_filter</span><span class="o">=</span><span class="s">-suds</span>
+</pre></div>
+</div>
+<div class="section" id="configuration-parameter-types">
+<h3>Configuration Parameter Types<a class="headerlink" href="#configuration-parameter-types" title="Permalink to this headline">¶</a></h3>
+<p>The following types are supported (and used):</p>
+<dl class="docutils">
+<dt><strong>text</strong></dt>
+<dd>This just assigns whatever text you supply to the configuration setting.</dd>
+<dt><strong>bool</strong></dt>
+<dd>This assigns a boolean value to the configuration setting.
+The text describes the functionality when the value is true.
+True values are &#8220;1&#8221;, &#8220;yes&#8221;, &#8220;true&#8221;, and &#8220;on&#8221;.
+False values are &#8220;0&#8221;, &#8220;no&#8221;, &#8220;false&#8221;, and &#8220;off&#8221;.</dd>
+<dt><strong>sequence&lt;text&gt;</strong></dt>
+<dd><p class="first">These fields accept one or more values on new lines, for example a tag
+expression might look like:</p>
+<div class="highlight-ini"><div class="highlight"><pre><span class="na">tags</span><span class="o">=</span><span class="s">@foo,~@bar</span>
+<span class="s">    @zap</span>
+</pre></div>
+</div>
+<p>which is the equivalent of the command-line usage:</p>
+<div class="last highlight-python"><div class="highlight"><pre>--tags @foo,~@bar --tags @zap
+</pre></div>
+</div>
+</dd>
+</dl>
+</div>
+<div class="section" id="configuration-parameters">
+<h3>Configuration Parameters<a class="headerlink" href="#configuration-parameters" title="Permalink to this headline">¶</a></h3>
+<span class="target" id="index-0"></span><dl class="describe">
+<dt>
+<tt class="descname">color : bool</tt></dt>
+<dd><p>Use ANSI color escapes. This is the default behaviour. This switch is
+used to override a configuration file setting.</p>
+</dd></dl>
+
+<span class="target" id="index-1"></span><dl class="describe">
+<dt>
+<tt class="descname">dry_run : bool</tt></dt>
+<dd><p>Invokes formatters without executing the steps.</p>
+</dd></dl>
+
+<span class="target" id="index-2"></span><dl class="describe">
+<dt>
+<tt class="descname">userdata_defines : sequence&lt;text&gt;</tt></dt>
+<dd><p>Define user-specific data for the config.userdata dictionary. Example:
+-D foo=bar to store it in config.userdata[&#8220;foo&#8221;].</p>
+</dd></dl>
+
+<span class="target" id="index-3"></span><dl class="describe">
+<dt>
+<tt class="descname">exclude_re : text</tt></dt>
+<dd><p>Don&#8217;t run feature files matching regular expression PATTERN.</p>
+</dd></dl>
+
+<span class="target" id="index-4"></span><dl class="describe">
+<dt>
+<tt class="descname">include_re : text</tt></dt>
+<dd><p>Only run feature files matching regular expression PATTERN.</p>
+</dd></dl>
+
+<span class="target" id="index-5"></span><dl class="describe">
+<dt>
+<tt class="descname">junit : bool</tt></dt>
+<dd><p>Output JUnit-compatible reports. When junit is enabled, all stdout and
+stderr will be redirected and dumped to the junit report,
+regardless of the &#8216;&#8211;capture&#8217; and &#8216;&#8211;no-capture&#8217; options.</p>
+</dd></dl>
+
+<span class="target" id="index-6"></span><dl class="describe">
+<dt>
+<tt class="descname">junit_directory : text</tt></dt>
+<dd><p>Directory in which to store JUnit reports.</p>
+</dd></dl>
+
+<span class="target" id="index-7"></span><dl class="describe">
+<dt>
+<tt class="descname">default_format : text</tt></dt>
+<dd><p>Specify default formatter (default: pretty).</p>
+</dd></dl>
+
+<span class="target" id="index-8"></span><dl class="describe">
+<dt>
+<tt class="descname">format : sequence&lt;text&gt;</tt></dt>
+<dd><p>Specify a formatter. If none is specified the default formatter is
+used. Pass &#8216;&#8211;format help&#8217; to get a list of available formatters.</p>
+</dd></dl>
+
+<span class="target" id="index-9"></span><dl class="describe">
+<dt>
+<tt class="descname">steps_catalog : bool</tt></dt>
+<dd><p>Show a catalog of all available step definitions. SAME AS:
+&#8211;format=steps.catalog &#8211;dry-run &#8211;no-summary -q</p>
+</dd></dl>
+
+<span class="target" id="index-10"></span><dl class="describe">
+<dt>
+<tt class="descname">scenario_outline_annotation_schema : text</tt></dt>
+<dd><p>Specify name annotation schema for scenario outline (default=&#8221;{name}
+&#8211; &#64;{row.id} {examples.name}&#8221;).</p>
+</dd></dl>
+
+<span class="target" id="index-11"></span><dl class="describe">
+<dt>
+<tt class="descname">show_skipped : bool</tt></dt>
+<dd><p>Print skipped steps. This is the default behaviour. This switch is
+used to override a configuration file setting.</p>
+</dd></dl>
+
+<span class="target" id="index-12"></span><dl class="describe">
+<dt>
+<tt class="descname">show_snippets : bool</tt></dt>
+<dd><p>Print snippets for unimplemented steps. This is the default behaviour.
+This switch is used to override a configuration file setting.</p>
+</dd></dl>
+
+<span class="target" id="index-13"></span><dl class="describe">
+<dt>
+<tt class="descname">show_multiline : bool</tt></dt>
+<dd><p>Print multiline strings and tables under steps. This is the default
+behaviour. This switch is used to override a configuration file
+setting.</p>
+</dd></dl>
+
+<span class="target" id="index-14"></span><dl class="describe">
+<dt>
+<tt class="descname">name : sequence&lt;text&gt;</tt></dt>
+<dd><p>Only execute the feature elements which match part of the given name.
+If this option is given more than once, it will match against all
+the given names.</p>
+</dd></dl>
+
+<span class="target" id="index-15"></span><dl class="describe">
+<dt>
+<tt class="descname">stdout_capture : bool</tt></dt>
+<dd><p>Capture stdout (any stdout output will be printed if there is a
+failure.) This is the default behaviour. This switch is used to
+override a configuration file setting.</p>
+</dd></dl>
+
+<span class="target" id="index-16"></span><dl class="describe">
+<dt>
+<tt class="descname">stderr_capture : bool</tt></dt>
+<dd><p>Capture stderr (any stderr output will be printed if there is a
+failure.) This is the default behaviour. This switch is used to
+override a configuration file setting.</p>
+</dd></dl>
+
+<span class="target" id="index-17"></span><dl class="describe">
+<dt>
+<tt class="descname">log_capture : bool</tt></dt>
+<dd><p>Capture logging. All logging during a step will be captured and
+displayed in the event of a failure. This is the default
+behaviour. This switch is used to override a configuration file
+setting.</p>
+</dd></dl>
+
+<span class="target" id="index-18"></span><dl class="describe">
+<dt>
+<tt class="descname">logging_level : text</tt></dt>
+<dd><p>Specify a level to capture logging at. The default is INFO - capturing
+everything.</p>
+</dd></dl>
+
+<span class="target" id="index-19"></span><dl class="describe">
+<dt>
+<tt class="descname">logging_format : text</tt></dt>
+<dd><p>Specify custom format to print statements. Uses the same format as
+used by standard logging handlers. The default is
+&#8216;%(levelname)s:%(name)s:%(message)s&#8217;.</p>
+</dd></dl>
+
+<span class="target" id="index-20"></span><dl class="describe">
+<dt>
+<tt class="descname">logging_datefmt : text</tt></dt>
+<dd><p>Specify custom date/time format to print statements. Uses the same
+format as used by standard logging handlers.</p>
+</dd></dl>
+
+<span class="target" id="index-21"></span><dl class="describe">
+<dt>
+<tt class="descname">logging_filter : text</tt></dt>
+<dd><p>Specify which statements to filter in/out. By default, everything is
+captured. If the output is too verbose, use this option to filter
+out needless output. Example: <tt class="docutils literal"><span class="pre">logging_filter</span> <span class="pre">=</span> <span class="pre">foo</span></tt> will
+capture statements issued ONLY to &#8220;foo&#8221; or &#8220;foo.what.ever.sub&#8221; but
+not &#8220;foobar&#8221; or other logger. Specify multiple loggers with comma:
+<tt class="docutils literal"><span class="pre">logging_filter</span> <span class="pre">=</span> <span class="pre">foo,bar,baz</span></tt>. If any logger name is prefixed
+with a minus, eg <tt class="docutils literal"><span class="pre">logging_filter</span> <span class="pre">=</span> <span class="pre">-foo</span></tt>, it will be excluded
+rather than included.</p>
+</dd></dl>
+
+<span class="target" id="index-22"></span><dl class="describe">
+<dt>
+<tt class="descname">logging_clear_handlers : bool</tt></dt>
+<dd><p>Clear all other logging handlers.</p>
+</dd></dl>
+
+<span class="target" id="index-23"></span><dl class="describe">
+<dt>
+<tt class="descname">summary : bool</tt></dt>
+<dd><p>Display the summary at the end of the run.</p>
+</dd></dl>
+
+<span class="target" id="index-24"></span><dl class="describe">
+<dt>
+<tt class="descname">outfiles : sequence&lt;text&gt;</tt></dt>
+<dd><p>Write to specified file instead of stdout.</p>
+</dd></dl>
+
+<span class="target" id="index-25"></span><dl class="describe">
+<dt>
+<tt class="descname">paths : sequence&lt;text&gt;</tt></dt>
+<dd><p>Specify default feature paths, used when none are provided.</p>
+</dd></dl>
+
+<span class="target" id="index-26"></span><dl class="describe">
+<dt>
+<tt class="descname">quiet : bool</tt></dt>
+<dd><p>Alias for &#8211;no-snippets &#8211;no-source.</p>
+</dd></dl>
+
+<span class="target" id="index-27"></span><dl class="describe">
+<dt>
+<tt class="descname">show_source : bool</tt></dt>
+<dd><p>Print the file and line of the step definition with the steps. This is
+the default behaviour. This switch is used to override a
+configuration file setting.</p>
+</dd></dl>
+
+<span class="target" id="index-28"></span><dl class="describe">
+<dt>
+<tt class="descname">stage : text</tt></dt>
+<dd><p>Defines the current test stage. The test stage name is used as name
+prefix for the environment file and the steps directory (instead
+of default path names).</p>
+</dd></dl>
+
+<span class="target" id="index-29"></span><dl class="describe">
+<dt>
+<tt class="descname">stop : bool</tt></dt>
+<dd><p>Stop running tests at the first failure.</p>
+</dd></dl>
+
+<span class="target" id="index-30"></span><dl class="describe">
+<dt>
+<tt class="descname">default_tags : text</tt></dt>
+<dd><p>Define default tags when non are provided. See &#8211;tags for more
+information.</p>
+</dd></dl>
+
+<span class="target" id="index-31"></span><dl class="describe">
+<dt>
+<tt class="descname">tags : sequence&lt;text&gt;</tt></dt>
+<dd><p>Only execute certain features or scenarios based on the tag expression
+given. See below for how to code tag expressions in configuration
+files.</p>
+</dd></dl>
+
+<span class="target" id="index-32"></span><dl class="describe">
+<dt>
+<tt class="descname">show_timings : bool</tt></dt>
+<dd><p>Print the time taken, in seconds, of each step after the step has
+completed. This is the default behaviour. This switch is used to
+override a configuration file setting.</p>
+</dd></dl>
+
+<span class="target" id="index-33"></span><dl class="describe">
+<dt>
+<tt class="descname">verbose : bool</tt></dt>
+<dd><p>Show the files and features loaded.</p>
+</dd></dl>
+
+<span class="target" id="index-34"></span><dl class="describe">
+<dt>
+<tt class="descname">wip : bool</tt></dt>
+<dd><p>Only run scenarios tagged with &#8220;wip&#8221;. Additionally: use the &#8220;plain&#8221;
+formatter, do not capture stdout or logging output and stop at the
+first failure.</p>
+</dd></dl>
+
+<span class="target" id="index-35"></span><dl class="describe">
+<dt>
+<tt class="descname">expand : bool</tt></dt>
+<dd><p>Expand scenario outline tables in output.</p>
+</dd></dl>
+
+<span class="target" id="index-36"></span><dl class="describe">
+<dt>
+<tt class="descname">lang : text</tt></dt>
+<dd><p>Use keywords for a language other than English.</p>
+</dd></dl>
+
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="_static/behave_logo1.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Using <em>behave</em></a><ul>
+<li><a class="reference internal" href="#command-line-arguments">Command-Line Arguments</a><ul>
+<li><a class="reference internal" href="#tag-expression">Tag Expression</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#configuration-files">Configuration Files</a><ul>
+<li><a class="reference internal" href="#configuration-parameter-types">Configuration Parameter Types</a></li>
+<li><a class="reference internal" href="#configuration-parameters">Configuration Parameters</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="gherkin.html" title="previous chapter">Feature Testing Setup</a></li>
+      <li>Next: <a href="api.html" title="next chapter">Behave API Reference</a></li>
+  </ul></li>
+</ul>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/behave.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy; Copyright 2012-2015, Benno Rice, Richard Jones and Jens Engel.
+    </div>
+    <a href="https://github.com/behave/behave" class="github">
+      <img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/38ef81f8aca64bb9a64448d0d70f1308ef5341ab/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6461726b626c75655f3132313632312e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png">
+    </a>
+  </body>
+</html>

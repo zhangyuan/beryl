@@ -1,0 +1,902 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Noteworthy in Version 1.2.5 &mdash; behave 1.2.6.dev0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/flasky.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.2.6.dev0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="behave 1.2.6.dev0 documentation" href="index.html" />
+    <link rel="up" title="New and Noteworthy" href="new_and_noteworthy.html" />
+    <link rel="next" title="Noteworthy in Version 1.2.4" href="new_and_noteworthy_v1.2.4.html" />
+    <link rel="prev" title="New and Noteworthy" href="new_and_noteworthy.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="new_and_noteworthy_v1.2.4.html" title="Noteworthy in Version 1.2.4"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="new_and_noteworthy.html" title="New and Noteworthy"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">behave 1.2.6.dev0 documentation</a> &raquo;</li>
+          <li><a href="new_and_noteworthy.html" accesskey="U">New and Noteworthy</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="noteworthy-in-version-1-2-5">
+<h1>Noteworthy in Version 1.2.5<a class="headerlink" href="#noteworthy-in-version-1-2-5" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="scenario-outline-improvements">
+<h2>Scenario Outline Improvements<a class="headerlink" href="#scenario-outline-improvements" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="better-represent-example-row">
+<span id="index-0"></span><h3>Better represent Example/Row<a class="headerlink" href="#better-represent-example-row" title="Permalink to this headline">¶</a></h3>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Since:</th><td class="field-body">behave 1.2.5a1</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Covers:</th><td class="field-body">Name annotation, file location</td>
+</tr>
+</tbody>
+</table>
+<p>A scenario outline basically a parametrized scenario template.
+It represents a macro/script that is executed for a data-driven set of examples
+(parametrized data). Therefore, a scenario outline generates several scenarios,
+each representing one example/row combination.</p>
+<div class="highlight-gherkin"><div class="highlight"><pre><span class="c"># -- file:features/xxx.feature</span><span class="nf"></span>
+<span class="k">Feature:</span><span class="nf"></span>
+<span class="nf">  </span><span class="k">Scenario Outline:</span><span class="nf"> Wow            # line 2</span>
+<span class="k">    Given </span><span class="nf">an employee &quot;</span><span class="nv">&lt;name&gt;</span><span class="nf">&quot;</span>
+
+<span class="nf">    </span><span class="k">Examples:</span><span class="nf"> Araxas</span><span class="k"></span>
+<span class="k">      |</span><span class="nv"> name</span><span class="k">  |</span><span class="nv"> birthyear</span><span class="k"> |</span><span class="nf"></span>
+<span class="k">      |</span><span class="s"> Alice</span><span class="k"> |</span><span class="s">  1985</span><span class="k">     |</span><span class="s">         </span><span class="c"># line 7</span><span class="k"></span>
+<span class="k">      |</span><span class="s"> Bob</span><span class="k">   |</span><span class="s">  1975</span><span class="k">     |</span><span class="s">         </span><span class="c"># line 8</span><span class="s"></span>
+
+<span class="s">    Examples:</span><span class="k"></span>
+<span class="k">      |</span><span class="s"> name</span><span class="k">   |</span><span class="s"> birthyear</span><span class="k"> |</span><span class="nf"></span>
+<span class="k">      |</span><span class="s"> Charly</span><span class="k"> |</span><span class="s">  1995</span><span class="k">     |</span><span class="s">        </span><span class="c"># line 12</span><span class="s"></span>
+</pre></div>
+</div>
+<p>Up to now, the following scenarios were generated from the scenario outline:</p>
+<div class="highlight-gherkin"><div class="highlight"><pre><span class="k">Scenario Outline:</span><span class="nf"> Wow          # features/xxx.feature:2</span>
+<span class="k">  Given </span><span class="nf">an employee &quot;</span><span class="s">Alice</span><span class="nf">&quot;</span>
+
+<span class="k">Scenario Outline:</span><span class="nf"> Wow          # features/xxx.feature:2</span>
+<span class="k">  Given </span><span class="nf">an employee &quot;</span><span class="s">Bob</span><span class="nf">&quot;</span>
+
+<span class="k">Scenario Outline:</span><span class="nf"> Wow          # features/xxx.feature:2</span>
+<span class="k">  Given </span><span class="nf">an employee &quot;</span><span class="s">Charly</span><span class="nf">&quot;</span>
+</pre></div>
+</div>
+<p>Note that  all generated scenarios had the:</p>
+<blockquote>
+<div><ul class="simple">
+<li>same name (scenario_outline.name)</li>
+<li>same file location (scenario_outline.file_location)</li>
+</ul>
+</div></blockquote>
+<p>From now on, the generated scenarios better
+represent the example/row combination within a scenario outline:</p>
+<div class="highlight-gherkin"><div class="highlight"><pre><span class="k">Scenario Outline:</span><span class="nf"> Wow -- @1.1 Araxas  # features/xxx.feature:7</span>
+<span class="k">  Given </span><span class="nf">an employee &quot;</span><span class="s">Alice</span><span class="nf">&quot;</span>
+
+<span class="k">Scenario Outline:</span><span class="nf"> Wow -- @1.2 Araxas  # features/xxx.feature:8</span>
+<span class="k">  Given </span><span class="nf">an employee &quot;</span><span class="s">Bob</span><span class="nf">&quot;</span>
+
+<span class="k">Scenario Outline:</span><span class="nf"> Wow -- @2.1         # features/xxx.feature:12</span>
+<span class="k">  Given </span><span class="nf">an employee &quot;</span><span class="s">Charly</span><span class="nf">&quot;</span>
+</pre></div>
+</div>
+<p>Note that:</p>
+<blockquote>
+<div><ul class="simple">
+<li>scenario name is now unique for any examples/row combination</li>
+<li>scenario name optionally contains the examples (group) name (if one exists)</li>
+<li>each scenario has a unique file location, based on the row&#8217;s file location</li>
+</ul>
+</div></blockquote>
+<p>Therefore, each generated scenario from a scenario outline can be selected
+via its file location (and run on its own). In addition, if one fails,
+it is now possible to rerun only the failing example/row combination(s).</p>
+<p>The name annoations schema for the generated scenarios from above provides
+the new default name annotation schema.
+It can be adapted/overwritten in &#8220;behave.ini&#8221;:</p>
+<div class="highlight-ini"><div class="highlight"><pre><span class="c1"># -- file:behave.ini</span>
+<span class="k">[behave]</span>
+<span class="na">scenario_outline_annotation_schema</span> <span class="o">=</span> <span class="s">{name} -- @{row.id} {examples.name}</span>
+
+<span class="c1"># -- REVERT TO: Old naming schema:</span>
+<span class="c1"># scenario_outline_annotation_schema = {name}</span>
+</pre></div>
+</div>
+<p>The following additional placeholders are provided within a
+scenario outline to support this functionality.
+They can be used anywhere within a scenario outline.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="19%" />
+<col width="81%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Placeholder</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>examples.name</td>
+<td>Refers name of the example group, may be an empty string.</td>
+</tr>
+<tr class="row-odd"><td>examples.index</td>
+<td>Index of the example group (range=1..N).</td>
+</tr>
+<tr class="row-even"><td>row.index</td>
+<td>Index of the current row within an example group (range=1..R).</td>
+</tr>
+<tr class="row-odd"><td>row.id</td>
+<td>Shortcut for schema: &#8220;&lt;examples.index&gt;.&lt;row.index&gt;&#8221;</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="name-may-contain-placeholders">
+<span id="index-1"></span><h3>Name may contain Placeholders<a class="headerlink" href="#name-may-contain-placeholders" title="Permalink to this headline">¶</a></h3>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Since:</th><td class="field-body">behave 1.2.5a1</td>
+</tr>
+</tbody>
+</table>
+<p>A scenario outline can now use placeholders from example/rows in its name
+or its examples name. When the scenarios a generated,
+these placeholders will be replaced with the values of the example/row.</p>
+<p>Up to now this behavior did only apply to steps of a scenario outline.</p>
+<p>EXAMPLE:</p>
+<div class="highlight-gherkin"><div class="highlight"><pre><span class="c"># -- file:features/xxx.feature</span><span class="nf"></span>
+<span class="k">Feature:</span><span class="nf"></span>
+<span class="nf">  </span><span class="k">Scenario Outline:</span><span class="nf"> Wow &lt;name&gt;-&lt;birthyear&gt;  # line 2</span>
+<span class="k">    Given </span><span class="nf">an employee &quot;</span><span class="nv">&lt;name&gt;</span><span class="nf">&quot;</span>
+
+<span class="nf">    </span><span class="k">Examples:</span>
+<span class="k">      |</span><span class="nv"> name</span><span class="k">  |</span><span class="nv"> birthyear</span><span class="k"> |</span><span class="nf"></span>
+<span class="k">      |</span><span class="s"> Alice</span><span class="k"> |</span><span class="s">  1985</span><span class="k">     |</span><span class="s">         </span><span class="c"># line 7</span><span class="k"></span>
+<span class="k">      |</span><span class="s"> Bob</span><span class="k">   |</span><span class="s">  1975</span><span class="k">     |</span><span class="s">         </span><span class="c"># line 8</span><span class="s"></span>
+
+<span class="s">    Examples: Benares-</span><span class="nv">&lt;ID&gt;</span><span class="k"></span>
+<span class="k">      |</span><span class="s"> name</span><span class="k">   |</span><span class="s"> birthyear</span><span class="k"> |</span><span class="s"> ID</span><span class="k"> |</span><span class="nf"></span>
+<span class="k">      |</span><span class="s"> Charly</span><span class="k"> |</span><span class="s">  1995</span><span class="k">     |</span><span class="s"> 42</span><span class="k"> |</span><span class="s">   </span><span class="c"># line 12</span><span class="s"></span>
+</pre></div>
+</div>
+<p>This leads to the following generated scenarios,
+one for each examples/row combination:</p>
+<div class="highlight-gherkin"><div class="highlight"><pre><span class="k">Scenario Outline:</span><span class="nf"> Wow Alice-1985 -- @1.1         # features/xxx.feature:7</span>
+<span class="k">  Given </span><span class="nf">an employee &quot;</span><span class="s">Alice</span><span class="nf">&quot;</span>
+
+<span class="k">Scenario Outline:</span><span class="nf"> Wow Bob-1975 -- @1.2           # features/xxx.feature:8</span>
+<span class="k">  Given </span><span class="nf">an employee &quot;</span><span class="s">Bob</span><span class="nf">&quot;</span>
+
+<span class="k">Scenario Outline:</span><span class="nf"> Wow Charly-1885 -- @2.1 Benares-42 # features/xxx.feature:12</span>
+<span class="k">  Given </span><span class="nf">an employee &quot;</span><span class="s">Charly</span><span class="nf">&quot;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="tags-may-contain-placeholders">
+<span id="index-2"></span><h3>Tags may contain Placeholders<a class="headerlink" href="#tags-may-contain-placeholders" title="Permalink to this headline">¶</a></h3>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Since:</th><td class="field-body">behave 1.2.5a1</td>
+</tr>
+</tbody>
+</table>
+<p>Tags from a Scenario Outline are also part of the parametrized template.
+Therefore, you may also use placeholders in the tags of a Scenario Outline.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<ul class="last simple">
+<li>Placeholder names, that are used in tags, should not contain whitespace.</li>
+<li>Placeholder values, that are used in tags, are transformed to contain
+no whitespace characters.</li>
+</ul>
+</div>
+<p>EXAMPLE:</p>
+<div class="highlight-gherkin"><div class="highlight"><pre><span class="c"># -- file:features/xxx.feature</span><span class="nf"></span>
+<span class="k">Feature:</span><span class="nf"></span>
+
+<span class="nf">  @foo.group&lt;examples.index&gt;</span>
+<span class="nf">  @foo.row&lt;row.id&gt;</span>
+<span class="nf">  @foo.name.&lt;name&gt;</span>
+<span class="nf">  </span><span class="k">Scenario Outline:</span><span class="nf"> Wow            # line 6</span>
+<span class="k">    Given </span><span class="nf">an employee &quot;</span><span class="nv">&lt;name&gt;</span><span class="nf">&quot;</span>
+
+<span class="nf">    </span><span class="k">Examples:</span><span class="nf"> Araxas</span><span class="k"></span>
+<span class="k">      |</span><span class="nv"> name</span><span class="k">  |</span><span class="nv"> birthyear</span><span class="k"> |</span><span class="nf"></span>
+<span class="k">      |</span><span class="s"> Alice</span><span class="k"> |</span><span class="s">  1985</span><span class="k">     |</span><span class="s">         </span><span class="c"># line 11</span><span class="k"></span>
+<span class="k">      |</span><span class="s"> Bob</span><span class="k">   |</span><span class="s">  1975</span><span class="k">     |</span><span class="s">         </span><span class="c"># line 12</span><span class="s"></span>
+
+<span class="s">    Examples: Benares</span><span class="k"></span>
+<span class="k">      |</span><span class="s"> name</span><span class="k">   |</span><span class="s"> birthyear</span><span class="k"> |</span><span class="s"> ID</span><span class="k"> |</span><span class="nf"></span>
+<span class="k">      |</span><span class="s"> Charly</span><span class="k"> |</span><span class="s">  1995</span><span class="k">     |</span><span class="s"> 42</span><span class="k"> |</span><span class="s">   </span><span class="c"># line 16</span><span class="s"></span>
+</pre></div>
+</div>
+<p>This leads to the following generated scenarios,
+one for each examples/row combination:</p>
+<div class="highlight-gherkin"><div class="highlight"><pre><span class="nt">@foo.group1</span><span class="nf"> </span><span class="nt">@foo.row1.1</span><span class="nf"> </span><span class="nt">@foo.name.Alice</span><span class="nf"></span>
+<span class="k">Scenario Outline:</span><span class="nf"> Wow -- @1.1 Araxas   # features/xxx.feature:11</span>
+<span class="k">  Given </span><span class="nf">an employee &quot;</span><span class="s">Alice</span><span class="nf">&quot;</span>
+
+<span class="nt">@foo.group1</span><span class="nf"> </span><span class="nt">@foo.row1.2</span><span class="nf"> </span><span class="nt">@foo.name.Bob</span><span class="nf"></span>
+<span class="k">Scenario Outline:</span><span class="nf"> Wow -- @1.2 Araxas   # features/xxx.feature:12</span>
+<span class="k">  Given </span><span class="nf">an employee &quot;</span><span class="s">Bob</span><span class="nf">&quot;</span>
+
+<span class="nt">@foo.group2</span><span class="nf"> </span><span class="nt">@foo.row2.1</span><span class="nf"> </span><span class="nt">@foo.name.Charly</span><span class="nf"></span>
+<span class="k">Scenario Outline:</span><span class="nf"> Wow -- @2.1 Benares  # features/xxx.feature:16</span>
+<span class="k">  Given </span><span class="nf">an employee &quot;</span><span class="s">Charly</span><span class="nf">&quot;</span>
+</pre></div>
+</div>
+<p id="index-3">It is now possible to run only the examples group &#8220;Araxas&#8221; (examples group 1)
+by using the select-by-tag mechanism:</p>
+<div class="highlight-sh"><div class="highlight"><pre><span class="nv">$ </span>behave --tags<span class="o">=</span>@foo.group1 -f progress3 features/xxx.feature
+...  <span class="c"># features/xxx.feature</span>
+  Wow -- @1.1 Araxas  .
+  Wow -- @1.2 Araxas  .
+</pre></div>
+</div>
+</div>
+<div class="section" id="run-examples-group-via-select-by-name">
+<span id="index-4"></span><h3>Run examples group via select-by-name<a class="headerlink" href="#run-examples-group-via-select-by-name" title="Permalink to this headline">¶</a></h3>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Since:</th><td class="field-body">behave 1.2.5a1</td>
+</tr>
+</tbody>
+</table>
+<p>The improvements on unique generated scenario names for a scenario outline
+(with name annotation) can now be used to run all rows of one examples group.</p>
+<p>EXAMPLE:</p>
+<div class="highlight-gherkin"><div class="highlight"><pre><span class="c"># -- file:features/xxx.feature</span><span class="nf"></span>
+<span class="k">Feature:</span><span class="nf"></span>
+<span class="nf">  </span><span class="k">Scenario Outline:</span><span class="nf"> Wow            # line 2</span>
+<span class="k">    Given </span><span class="nf">an employee &quot;</span><span class="nv">&lt;name&gt;</span><span class="nf">&quot;</span>
+
+<span class="nf">    </span><span class="k">Examples:</span><span class="nf"> Araxas</span><span class="k"></span>
+<span class="k">      |</span><span class="nv"> name</span><span class="k">  |</span><span class="nv"> birthyear</span><span class="k"> |</span><span class="nf"></span>
+<span class="k">      |</span><span class="s"> Alice</span><span class="k"> |</span><span class="s">  1985</span><span class="k">     |</span><span class="s">         </span><span class="c"># line 7</span><span class="k"></span>
+<span class="k">      |</span><span class="s"> Bob</span><span class="k">   |</span><span class="s">  1975</span><span class="k">     |</span><span class="s">         </span><span class="c"># line 8</span><span class="s"></span>
+
+<span class="s">    Examples: Benares</span><span class="k"></span>
+<span class="k">      |</span><span class="s"> name</span><span class="k">   |</span><span class="s"> birthyear</span><span class="k"> |</span><span class="nf"></span>
+<span class="k">      |</span><span class="s"> Charly</span><span class="k"> |</span><span class="s">  1995</span><span class="k">     |</span><span class="s">        </span><span class="c"># line 12</span><span class="s"></span>
+</pre></div>
+</div>
+<p>This leads to the following generated scenarios (when the feature is executed):</p>
+<div class="highlight-gherkin"><div class="highlight"><pre><span class="k">Scenario Outline:</span><span class="nf"> Wow -- @1.1 Araxas  # features/xxx.feature:7</span>
+<span class="k">  Given </span><span class="nf">an employee &quot;</span><span class="s">Alice</span><span class="nf">&quot;</span>
+
+<span class="k">Scenario Outline:</span><span class="nf"> Wow -- @1.2 Araxas   # features/xxx.feature:8</span>
+<span class="k">  Given </span><span class="nf">an employee &quot;</span><span class="s">Bob</span><span class="nf">&quot;</span>
+
+<span class="k">Scenario Outline:</span><span class="nf"> Wow -- @2.1 Benares  # features/xxx.feature:12</span>
+<span class="k">  Given </span><span class="nf">an employee &quot;</span><span class="s">Charly</span><span class="nf">&quot;</span>
+</pre></div>
+</div>
+<p>You can now run all rows of the &#8220;Araxas&#8221; examples (group)
+by selecting it by name (name part or regular expression):</p>
+<div class="highlight-sh"><div class="highlight"><pre><span class="nv">$ </span>behave --name<span class="o">=</span>Araxas -f progress3 features/xxx.feature
+...  <span class="c"># features/xxx.feature</span>
+  Wow -- @1.1 Araxas  .
+  Wow -- @1.2 Araxas  .
+
+<span class="nv">$ </span>behave --name<span class="o">=</span><span class="s1">&#39;-- @.* Araxas&#39;</span> -f progress3 features/xxx.feature
+...  <span class="c"># features/xxx.feature</span>
+  Wow -- @1.1 Araxas  .
+  Wow -- @1.2 Araxas  .
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="exclude-feature-scenario-at-runtime">
+<span id="index-5"></span><h2>Exclude Feature/Scenario at Runtime<a class="headerlink" href="#exclude-feature-scenario-at-runtime" title="Permalink to this headline">¶</a></h2>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Since:</th><td class="field-body">behave 1.2.5a1</td>
+</tr>
+</tbody>
+</table>
+<p>A test writer can now provide a runtime decision logic to exclude
+a feature, scenario or scenario outline from a test run
+within the following hooks:</p>
+<blockquote>
+<div><ul class="simple">
+<li><tt class="docutils literal"><span class="pre">before_feature()</span></tt> for a feature</li>
+<li><tt class="docutils literal"><span class="pre">before_scenario()</span></tt> for a scenario</li>
+<li>step implementation (normally only: given step)</li>
+</ul>
+</div></blockquote>
+<p>by using the <tt class="docutils literal"><span class="pre">skip()</span></tt> method before a feature or scenario is run.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># -- FILE: features/environment.py</span>
+<span class="c"># EXAMPLE 1: Exclude scenario from run-set at runtime.</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="k">def</span> <span class="nf">should_exclude_scenario</span><span class="p">(</span><span class="n">scenario</span><span class="p">):</span>
+    <span class="c"># -- RUNTIME DECISION LOGIC: Will exclude</span>
+    <span class="c">#  * Scenario: Alice</span>
+    <span class="c">#  * Scenario: Alice in Wonderland</span>
+    <span class="c">#  * Scenario: Bob and Alice2</span>
+    <span class="k">return</span> <span class="s">&quot;Alice&quot;</span> <span class="ow">in</span> <span class="n">scenario</span><span class="o">.</span><span class="n">name</span>
+
+<span class="k">def</span> <span class="nf">before_scenario</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">scenario</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">should_exclude_scenario</span><span class="p">(</span><span class="n">scenario</span><span class="p">):</span>
+        <span class="n">scenario</span><span class="o">.</span><span class="n">skip</span><span class="p">()</span>  <span class="c">#&lt; EXCLUDE FROM RUN-SET.</span>
+        <span class="c"># -- OR WITH REASON:</span>
+        <span class="c"># reason = &quot;RUNTIME-EXCLUDED&quot;</span>
+        <span class="c"># scenario.skip(reason)</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># -- FILE: features/steps/my_steps.py</span>
+<span class="c"># EXAMPLE 2: Skip remaining steps in step implementation.</span>
+<span class="kn">from</span> <span class="nn">behave</span> <span class="kn">import</span> <span class="n">given</span>
+
+<span class="nd">@given</span><span class="p">(</span><span class="s">&#39;the assumption &quot;{assumption}&quot; is met&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">step_check_assumption</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">assumption</span><span class="p">):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">is_assumption_valid</span><span class="p">(</span><span class="n">assumption</span><span class="p">):</span>
+        <span class="c"># -- SKIP: Remaining steps in current scenario.</span>
+        <span class="n">context</span><span class="o">.</span><span class="n">scenario</span><span class="o">.</span><span class="n">skip</span><span class="p">(</span><span class="s">&quot;OOPS: Assumption not met&quot;</span><span class="p">)</span>
+        <span class="k">return</span>
+
+    <span class="c"># -- NORMAL CASE:</span>
+    <span class="o">...</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="test-stages">
+<span id="index-6"></span><h2>Test Stages<a class="headerlink" href="#test-stages" title="Permalink to this headline">¶</a></h2>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Since:</th><td class="field-body">behave 1.2.5a1</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Intention:</th><td class="field-body">Use different Step Implementations for Each Stage</td>
+</tr>
+</tbody>
+</table>
+<p>A test stage allows the user to provide different step and environment
+implementation for each stage. Examples for test stages are:</p>
+<blockquote>
+<div><ul class="simple">
+<li>develop (example: development environment with simple database)</li>
+<li>product (example: use the real product and its database)</li>
+<li>systemint (system integration)</li>
+<li>...</li>
+</ul>
+</div></blockquote>
+<p>Each test stage may have a different test environment and needs to
+fulfill different testing constraints.</p>
+<p>EXAMPLE DIRECTORY LAYOUT (with <tt class="docutils literal"><span class="pre">stage=testlab</span></tt> and default stage):</p>
+<div class="highlight-python"><div class="highlight"><pre>features/
+  +-- steps/                # -- Step implementations for default stage.
+  |   +-- foo_steps.py
+  +-- testlab_steps/        # -- Step implementations for stage=testlab.
+  |   +-- foo_steps.py
+  +-- environment.py          # -- Environment for default stage.
+  +-- testlab_environment.py  # -- Environment for stage=testlab.
+  +-- *.feature
+</pre></div>
+</div>
+<p>To use the <tt class="docutils literal"><span class="pre">stage=testlab</span></tt>, you run behave with:</p>
+<div class="highlight-python"><div class="highlight"><pre>behave --stage=testlab ...
+</pre></div>
+</div>
+<p>or define the environment variable <tt class="docutils literal"><span class="pre">BEHAVE_STAGE=testlab</span></tt>.</p>
+<span class="target" id="userdata"></span></div>
+<div class="section" id="index-7">
+<span id="id1"></span><h2>Userdata<a class="headerlink" href="#index-7" title="Permalink to this headline">¶</a></h2>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Since:</th><td class="field-body">behave 1.2.5a1</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Intention:</th><td class="field-body">User-specific Configuration Data</td>
+</tr>
+</tbody>
+</table>
+<p>The userdata functionality allows a user to provide its own configuration data:</p>
+<blockquote>
+<div><ul class="simple">
+<li>as command-line option <tt class="docutils literal"><span class="pre">-D</span> <span class="pre">name=value</span></tt> or <tt class="docutils literal"><span class="pre">--define</span> <span class="pre">name=value</span></tt></li>
+<li>with the behave configuration file in section <tt class="docutils literal"><span class="pre">behave.userdata</span></tt></li>
+<li>load more configuration data in <tt class="docutils literal"><span class="pre">before_all()</span></tt> hook</li>
+</ul>
+</div></blockquote>
+<div class="highlight-ini"><div class="highlight"><pre><span class="c1"># -- FILE: behave.ini</span>
+<span class="k">[behave.userdata]</span>
+<span class="na">browser</span> <span class="o">=</span> <span class="s">firefox</span>
+<span class="na">server</span>  <span class="o">=</span> <span class="s">asterix</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>Command-line definitions override userdata definitions in the
+configuration file.</p>
+<p class="last">If the command-line contains no value part, like in <tt class="docutils literal"><span class="pre">-D</span> <span class="pre">NEEDS_CLEANUP</span></tt>,
+its value is <tt class="docutils literal"><span class="pre">&quot;true&quot;</span></tt>.</p>
+</div>
+<p>The userdata settings can be accessed as dictionary in hooks and steps
+by using the <tt class="docutils literal"><span class="pre">context.config.userdata</span></tt> dictionary.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># -- FILE: features/environment.py</span>
+<span class="k">def</span> <span class="nf">before_all</span><span class="p">(</span><span class="n">context</span><span class="p">):</span>
+    <span class="n">browser</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">userdata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;browser&quot;</span><span class="p">,</span> <span class="s">&quot;chrome&quot;</span><span class="p">)</span>
+    <span class="n">setup_browser</span><span class="p">(</span><span class="n">browser</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># -- FILE: features/steps/userdata_example_steps.py</span>
+<span class="nd">@given</span><span class="p">(</span><span class="s">&#39;I setup the system with the user-specified server&quot;&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">step_setup_system_with_userdata_server</span><span class="p">(</span><span class="n">context</span><span class="p">):</span>
+    <span class="n">server_host</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">userdata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;server&quot;</span><span class="p">,</span> <span class="s">&quot;beatrix&quot;</span><span class="p">)</span>
+    <span class="n">context</span><span class="o">.</span><span class="n">xxx_client</span> <span class="o">=</span> <span class="n">xxx_protocol</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">server_host</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-sh"><div class="highlight"><pre><span class="c"># -- ADAPT TEST-RUN: With user-specific data settings.</span>
+<span class="c"># SHELL:</span>
+behave -D <span class="nv">server</span><span class="o">=</span>obelix features/
+behave --define <span class="nv">server</span><span class="o">=</span>obelix features/
+</pre></div>
+</div>
+<p>Other examples for user-specific data are:</p>
+<blockquote>
+<div><ul class="simple">
+<li>Passing a URL to an external resource that should be used in the tests</li>
+<li>Turning off cleanup mechanisms implemented in environment hooks,
+for debugging purposes.</li>
+</ul>
+</div></blockquote>
+<div class="section" id="type-converters">
+<h3>Type Converters<a class="headerlink" href="#type-converters" title="Permalink to this headline">¶</a></h3>
+<p>The userdata object provides basic support for &#8220;type conversion on demand&#8221;,
+similar to the <tt class="xref py py-mod docutils literal"><span class="pre">configparser</span></tt> module. The following type conversion
+methods are provided:</p>
+<blockquote>
+<div><ul class="simple">
+<li><tt class="docutils literal"><span class="pre">Userdata.getint(name,</span> <span class="pre">default=0)</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">Userdata.getfloat(name,</span> <span class="pre">default=0.0)</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">Userdata.getbool(name,</span> <span class="pre">default=False)</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">Userdata.getas(convert_func,</span> <span class="pre">name,</span> <span class="pre">default=None,</span> <span class="pre">...)</span></tt></li>
+</ul>
+</div></blockquote>
+<p>Type conversion may raise a <tt class="docutils literal"><span class="pre">ValueError</span></tt> exception if the conversion fails.</p>
+<p>The following example shows how the type converter functions for integers are used:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># -- FILE: features/environment.py</span>
+<span class="k">def</span> <span class="nf">before_all</span><span class="p">(</span><span class="n">context</span><span class="p">):</span>
+    <span class="n">userdata</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">userdata</span>
+    <span class="n">server_name</span>  <span class="o">=</span> <span class="n">userdata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;server&quot;</span><span class="p">,</span> <span class="s">&quot;beatrix&quot;</span><span class="p">)</span>
+    <span class="n">int_number</span>   <span class="o">=</span> <span class="n">userdata</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s">&quot;port&quot;</span><span class="p">,</span> <span class="mi">80</span><span class="p">)</span>
+    <span class="n">bool_answer</span>  <span class="o">=</span> <span class="n">userdata</span><span class="o">.</span><span class="n">getbool</span><span class="p">(</span><span class="s">&quot;are_you_sure&quot;</span><span class="p">,</span> <span class="bp">True</span><span class="p">)</span>
+    <span class="n">float_number</span> <span class="o">=</span> <span class="n">userdata</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s">&quot;temperature_threshold&quot;</span><span class="p">,</span> <span class="mf">50.0</span><span class="p">)</span>
+    <span class="o">...</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="advanced-cases">
+<h3>Advanced Cases<a class="headerlink" href="#advanced-cases" title="Permalink to this headline">¶</a></h3>
+<p>The last section described the basic use cases of userdata.
+For more complicated cases, it is better to provide your own configuration setup
+in the <tt class="docutils literal"><span class="pre">before_all()</span></tt> hook.</p>
+<p>This section describes how to load a JSON configuration file and store its
+data in the <tt class="docutils literal"><span class="pre">userdata</span></tt> dictionary.</p>
+<div class="highlight-py"><div class="highlight"><pre><span class="c"># -- FILE: features/environment.py</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">os.path</span>
+
+<span class="k">def</span> <span class="nf">before_all</span><span class="p">(</span><span class="n">context</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Load and update userdata from JSON configuration file.&quot;&quot;&quot;</span>
+    <span class="n">userdata</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">userdata</span>
+    <span class="n">configfile</span> <span class="o">=</span> <span class="n">userdata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;configfile&quot;</span><span class="p">,</span> <span class="s">&quot;userconfig.json&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">configfile</span><span class="p">):</span>
+        <span class="k">assert</span> <span class="n">configfile</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s">&quot;.json&quot;</span><span class="p">)</span>
+        <span class="n">more_userdata</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">configfile</span><span class="p">))</span>
+        <span class="n">context</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">update_userdata</span><span class="p">(</span><span class="n">more_userdata</span><span class="p">)</span>
+        <span class="c"># -- NOTE: Reapplies userdata_defines from command-line, too.</span>
+</pre></div>
+</div>
+<div class="highlight-json"><div class="highlight"><pre># -- FILE: userconfig.json
+{
+    &quot;browser&quot;: &quot;firefox&quot;,
+    &quot;server&quot;:  &quot;asterix&quot;,
+    &quot;count&quot;:   42,
+    &quot;cleanup&quot;: true
+}
+</pre></div>
+</div>
+<p>Other advanced use cases:</p>
+<blockquote>
+<div><ul class="simple">
+<li>support configuration profiles via cmdline &#8221;... -D PROFILE=xxx ...&#8221;
+(uses profile-specific configuration file or profile-specific config section)</li>
+<li>provide test stage specific configuration data</li>
+</ul>
+</div></blockquote>
+</div>
+</div>
+<div class="section" id="active-tags">
+<span id="index-8"></span><h2>Active Tags<a class="headerlink" href="#active-tags" title="Permalink to this headline">¶</a></h2>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Since:</th><td class="field-body">behave 1.2.5a1</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Active tags</strong> are used when it is necessary to decide at runtime
+which features or scenarios should run (and which should be skipped).
+The runtime decision is based on which:</p>
+<blockquote>
+<div><ul class="simple">
+<li>platform the tests run (like: Windows, Linux, MACOSX, ...)</li>
+<li>runtime environment resources are available (by querying the &#8220;testbed&#8221;)</li>
+<li>runtime environment resources should be used (via <a class="reference internal" href="#userdata">userdata</a> or ...)</li>
+</ul>
+</div></blockquote>
+<p>Therefore, for <em>active tags</em> it is decided at runtime if a tag is enabled or
+disabled. The runtime decision logic excludes features/scenarios with disabled
+active tags before they are run.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>The active tag mechanism is applied after the normal tag filtering
+that is configured on the command-line.</p>
+<p class="last">The active tag mechanism uses  the <tt class="xref py py-class docutils literal"><span class="pre">ActiveTagMatcher</span></tt>
+for its core functionality.</p>
+</div>
+<div class="section" id="active-tag-logic">
+<span id="index-9"></span><h3>Active Tag Logic<a class="headerlink" href="#active-tag-logic" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div><ul class="simple">
+<li>A (positive) active tag is enabled,
+if its value matches the current value of its category.</li>
+<li>A negated active tag (starting with &#8220;not&#8221;) is enabled,
+if its value does not match the current value of its category.</li>
+<li>A sequence of active tags is enabled,
+if all its active tags are enabled (logical-and operation).</li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="active-tag-schema">
+<span id="index-10"></span><h3>Active Tag Schema<a class="headerlink" href="#active-tag-schema" title="Permalink to this headline">¶</a></h3>
+<p>The following two tag schemas are supported for active tags (by default).</p>
+<p><strong>Dialect 1:</strong></p>
+<blockquote>
+<div><ul class="simple">
+<li>&#64;active.with_{category}={value}</li>
+<li>&#64;not_active.with_{category}={value}</li>
+</ul>
+</div></blockquote>
+<p><strong>Dialect 2:</strong></p>
+<blockquote>
+<div><ul class="simple">
+<li>&#64;use.with_{category}={value}</li>
+<li>&#64;not.with_{category}={value}</li>
+<li>&#64;only.with_{category}={value}</li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="example-1">
+<h3>Example 1<a class="headerlink" href="#example-1" title="Permalink to this headline">¶</a></h3>
+<p>Assuming you have the feature file where:</p>
+<blockquote>
+<div><ul class="simple">
+<li>scenario &#8220;Alice&#8221; should only run when browser &#8220;Chrome&#8221; is used</li>
+<li>scenario &#8220;Bob&#8221; should only run when browser &#8220;Safari&#8221; is used</li>
+</ul>
+</div></blockquote>
+<div class="highlight-gherkin"><div class="highlight"><pre><span class="c"># -- FILE: features/alice.feature</span><span class="nf"></span>
+<span class="k">Feature:</span><span class="nf"></span>
+
+<span class="nf">    @use.with_browser=chrome</span>
+<span class="nf">    </span><span class="k">Scenario:</span><span class="nf"> Alice (Run only with Browser Chrome)</span>
+<span class="k">        Given </span><span class="nf">I do something</span>
+<span class="nf">        ...</span>
+
+<span class="nf">    </span><span class="nt">@use.with_browser=safari</span><span class="nf"></span>
+<span class="nf">    </span><span class="k">Scenario:</span><span class="nf"> Bob (Run only with Browser Safari)</span>
+<span class="k">        Given </span><span class="nf">I do something else</span>
+<span class="nf">        ...</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># -- FILE: features/environment.py</span>
+<span class="c"># EXAMPLE: ACTIVE TAGS, exclude scenario from run-set at runtime.</span>
+<span class="c"># NOTE: ActiveTagMatcher implements the runtime decision logic.</span>
+<span class="kn">from</span> <span class="nn">behave.tag_matcher</span> <span class="kn">import</span> <span class="n">ActiveTagMatcher</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="n">active_tag_value_provider</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s">&quot;browser&quot;</span><span class="p">:</span> <span class="s">&quot;chrome&quot;</span>
+<span class="p">}</span>
+<span class="n">active_tag_matcher</span> <span class="o">=</span> <span class="n">ActiveTagMatcher</span><span class="p">(</span><span class="n">active_tag_value_provider</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">before_all</span><span class="p">(</span><span class="n">context</span><span class="p">):</span>
+    <span class="c"># -- SETUP ACTIVE-TAG MATCHER VALUE(s):</span>
+    <span class="n">active_tag_value_provider</span><span class="p">[</span><span class="s">&quot;browser&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;BROWSER&quot;</span><span class="p">,</span> <span class="s">&quot;chrome&quot;</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">before_scenario</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">scenario</span><span class="p">):</span>
+    <span class="c"># -- NOTE: scenario.effective_tags := scenario.tags + feature.tags</span>
+    <span class="k">if</span> <span class="n">active_tag_matcher</span><span class="o">.</span><span class="n">should_exclude_with</span><span class="p">(</span><span class="n">scenario</span><span class="o">.</span><span class="n">effective_tags</span><span class="p">):</span>
+        <span class="c"># -- NOTE: Exclude any with @use.with_browser=&lt;other_browser&gt;</span>
+        <span class="n">scenario</span><span class="o">.</span><span class="n">skip</span><span class="p">(</span><span class="n">reason</span><span class="o">=</span><span class="s">&quot;DISABLED ACTIVE-TAG&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">By using this mechanism, the <tt class="docutils literal"><span class="pre">&#64;use.with_browser=*</span></tt> tags become
+<strong>active tags</strong>. The runtime decision logic decides when these tags
+are enabled or disabled (and uses them to exclude their scenario/feature).</p>
+</div>
+</div>
+<div class="section" id="example-2">
+<h3>Example 2<a class="headerlink" href="#example-2" title="Permalink to this headline">¶</a></h3>
+<p>Assuming you have scenarios with the following runtime conditions:</p>
+<blockquote>
+<div><ul class="simple">
+<li>Run scenario Alice only on Windows OS</li>
+<li>Run scenario Bob only with browser Chrome</li>
+</ul>
+</div></blockquote>
+<div class="highlight-gherkin"><div class="highlight"><pre><span class="c"># -- FILE: features/alice.feature</span><span class="nf"></span>
+<span class="c"># TAG SCHEMA: @use.with_{category}={value}, ...</span><span class="nf"></span>
+<span class="k">Feature:</span><span class="nf"></span>
+
+<span class="nf">  @use.with_os=win32</span>
+<span class="nf">  </span><span class="k">Scenario:</span><span class="nf"> Alice (Run only on Windows)</span>
+<span class="k">    Given </span><span class="nf">I do something</span>
+<span class="nf">    ...</span>
+
+<span class="nf">  </span><span class="nt">@use.with_browser=chrome</span><span class="nf"></span>
+<span class="nf">  </span><span class="k">Scenario:</span><span class="nf"> Bob (Run only with Web-Browser Chrome)</span>
+<span class="k">    Given </span><span class="nf">I do something else</span>
+<span class="nf">    ...</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># -- FILE: features/environment.py</span>
+<span class="kn">from</span> <span class="nn">behave.tag_matcher</span> <span class="kn">import</span> <span class="n">ActiveTagMatcher</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="c"># -- MATCHES ANY TAGS: @use.with_{category}={value}</span>
+<span class="c"># NOTE: active_tag_value_provider provides category values for active tags.</span>
+<span class="n">active_tag_value_provider</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s">&quot;browser&quot;</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;BEHAVE_BROWSER&quot;</span><span class="p">,</span> <span class="s">&quot;chrome&quot;</span><span class="p">),</span>
+    <span class="s">&quot;os&quot;</span><span class="p">:</span>      <span class="n">sys</span><span class="o">.</span><span class="n">platform</span><span class="p">,</span>
+<span class="p">}</span>
+<span class="n">active_tag_matcher</span> <span class="o">=</span> <span class="n">ActiveTagMatcher</span><span class="p">(</span><span class="n">active_tag_value_provider</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">setup_active_tag_values</span><span class="p">(</span><span class="n">userdata</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">category</span> <span class="ow">in</span> <span class="n">active_tag_value_provider</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">category</span> <span class="ow">in</span> <span class="n">userdata</span><span class="p">:</span>
+            <span class="n">active_tag_value_provider</span><span class="p">[</span><span class="n">category</span><span class="p">]</span> <span class="o">=</span> <span class="n">userdata</span><span class="p">[</span><span class="n">category</span><span class="p">]</span>
+
+<span class="k">def</span> <span class="nf">before_all</span><span class="p">(</span><span class="n">context</span><span class="p">):</span>
+    <span class="c"># -- SETUP ACTIVE-TAG MATCHER (with userdata):</span>
+    <span class="c"># USE: behave -D browser=safari ...</span>
+    <span class="n">setup_active_tag_values</span><span class="p">(</span><span class="n">context</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">userdata</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">before_feature</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">feature</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">active_tag_matcher</span><span class="o">.</span><span class="n">should_exclude_with</span><span class="p">(</span><span class="n">feature</span><span class="o">.</span><span class="n">tags</span><span class="p">):</span>
+        <span class="n">feature</span><span class="o">.</span><span class="n">skip</span><span class="p">(</span><span class="n">reason</span><span class="o">=</span><span class="s">&quot;DISABLED ACTIVE-TAG&quot;</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">before_scenario</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">scenario</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">active_tag_matcher</span><span class="o">.</span><span class="n">should_exclude_with</span><span class="p">(</span><span class="n">scenario</span><span class="o">.</span><span class="n">effective_tags</span><span class="p">):</span>
+        <span class="n">scenario</span><span class="o">.</span><span class="n">skip</span><span class="p">(</span><span class="s">&quot;DISABLED ACTIVE-TAG&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>By using the <a class="reference internal" href="#userdata">userdata</a> mechanism, you can now define on command-line
+which browser should be used when you run behave.</p>
+<div class="highlight-sh"><div class="highlight"><pre><span class="c"># -- SHELL: Run behave with browser=safari, ... by using userdata.</span>
+<span class="c"># TEST VARIANT 1: Run tests with browser=safari</span>
+behave -D <span class="nv">browser</span><span class="o">=</span>safari features/
+
+<span class="c"># TEST VARIANT 2: Run tests with browser=chrome</span>
+behave -D <span class="nv">browser</span><span class="o">=</span>chrome features/
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Unknown categories, missing in the <tt class="docutils literal"><span class="pre">active_tag_value_provider</span></tt> are ignored.</p>
+</div>
+</div>
+</div>
+<div class="section" id="user-defined-formatters">
+<h2>User-defined Formatters<a class="headerlink" href="#user-defined-formatters" title="Permalink to this headline">¶</a></h2>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Since:</th><td class="field-body">behave 1.2.5a1</td>
+</tr>
+</tbody>
+</table>
+<p>Behave formatters are a typical candidate for an extension point.
+You often need another formatter that provides the desired output format for a
+test-run.</p>
+<p>Therefore, behave supports now formatters as extension point (or plugin).
+It is now possible to use own, user-defined formatters in two ways:</p>
+<blockquote>
+<div><ul class="simple">
+<li>Use formatter class (as &#8220;scoped class name&#8221;) as <tt class="docutils literal"><span class="pre">--format</span></tt> option value</li>
+<li>Register own formatters by name in behave&#8217;s configuration file</li>
+</ul>
+</div></blockquote>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>Scoped class name (schema):</p>
+<blockquote class="last">
+<div><ul class="simple">
+<li><tt class="docutils literal"><span class="pre">my.module:MyClass</span></tt>   (preferred)</li>
+<li><tt class="docutils literal"><span class="pre">my.module::MyClass</span></tt>  (alternative; with double colon as separator)</li>
+</ul>
+</div></blockquote>
+</div>
+<div class="section" id="user-defined-formatter-on-command-line">
+<h3>User-defined Formatter on Command-line<a class="headerlink" href="#user-defined-formatter-on-command-line" title="Permalink to this headline">¶</a></h3>
+<p>Just use the formatter class (as &#8220;scoped class name&#8221;) on the command-line
+as value for the <tt class="docutils literal"><span class="pre">-format</span></tt> option (short option: <tt class="docutils literal"><span class="pre">-f</span></tt>):</p>
+<div class="highlight-sh"><div class="highlight"><pre>behave -f my.own_module:SimpleFormatter ...
+behave -f behave.formatter.plain:PlainFormatter ...
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># -- FILE: my/own_module.py</span>
+<span class="c"># (or installed as Python module: my.own_module)</span>
+<span class="kn">from</span> <span class="nn">behave.formatter.base</span> <span class="kn">import</span> <span class="n">Formatter</span>
+
+<span class="k">class</span> <span class="nc">SimpleFormatter</span><span class="p">(</span><span class="n">Formatter</span><span class="p">):</span>
+    <span class="n">description</span> <span class="o">=</span> <span class="s">&quot;A very simple NULL formatter&quot;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="register-user-defined-formatter-by-name">
+<h3>Register User-defined Formatter by Name<a class="headerlink" href="#register-user-defined-formatter-by-name" title="Permalink to this headline">¶</a></h3>
+<p>It is also possible to extend behave&#8217;s built-in formatters
+by registering one or more user-defined formatters by name in the
+configuration file:</p>
+<div class="highlight-ini"><div class="highlight"><pre><span class="c1"># -- FILE: behave.ini</span>
+<span class="k">[behave.formatters]</span>
+<span class="na">foo</span> <span class="o">=</span> <span class="s">behave_contrib.formatter.foo:FooFormatter</span>
+<span class="na">bar</span> <span class="o">=</span> <span class="s">behave_contrib.formatter.bar:BarFormatter</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># -- FILE: behave_contrib/formatter/foo.py</span>
+<span class="kn">from</span> <span class="nn">behave.formatter.base</span> <span class="kn">import</span> <span class="n">Formatter</span>
+
+<span class="k">class</span> <span class="nc">FooFormatter</span><span class="p">(</span><span class="n">Formatter</span><span class="p">):</span>
+    <span class="n">description</span> <span class="o">=</span> <span class="s">&quot;A FOO formatter&quot;</span>
+    <span class="o">...</span>
+</pre></div>
+</div>
+<p>Now you can use the name for any registered, user-defined formatter:</p>
+<div class="highlight-sh"><div class="highlight"><pre><span class="c"># -- NOTE: Use FooFormatter that was registered by name &quot;foo&quot;.</span>
+behave -f foo ...
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="_static/behave_logo1.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Noteworthy in Version 1.2.5</a><ul>
+<li><a class="reference internal" href="#scenario-outline-improvements">Scenario Outline Improvements</a><ul>
+<li><a class="reference internal" href="#better-represent-example-row">Better represent Example/Row</a></li>
+<li><a class="reference internal" href="#name-may-contain-placeholders">Name may contain Placeholders</a></li>
+<li><a class="reference internal" href="#tags-may-contain-placeholders">Tags may contain Placeholders</a></li>
+<li><a class="reference internal" href="#run-examples-group-via-select-by-name">Run examples group via select-by-name</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#exclude-feature-scenario-at-runtime">Exclude Feature/Scenario at Runtime</a></li>
+<li><a class="reference internal" href="#test-stages">Test Stages</a></li>
+<li><a class="reference internal" href="#index-7">Userdata</a><ul>
+<li><a class="reference internal" href="#type-converters">Type Converters</a></li>
+<li><a class="reference internal" href="#advanced-cases">Advanced Cases</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#active-tags">Active Tags</a><ul>
+<li><a class="reference internal" href="#active-tag-logic">Active Tag Logic</a></li>
+<li><a class="reference internal" href="#active-tag-schema">Active Tag Schema</a></li>
+<li><a class="reference internal" href="#example-1">Example 1</a></li>
+<li><a class="reference internal" href="#example-2">Example 2</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#user-defined-formatters">User-defined Formatters</a><ul>
+<li><a class="reference internal" href="#user-defined-formatter-on-command-line">User-defined Formatter on Command-line</a></li>
+<li><a class="reference internal" href="#register-user-defined-formatter-by-name">Register User-defined Formatter by Name</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  <li><a href="new_and_noteworthy.html">New and Noteworthy</a><ul>
+      <li>Previous: <a href="new_and_noteworthy.html" title="previous chapter">New and Noteworthy</a></li>
+      <li>Next: <a href="new_and_noteworthy_v1.2.4.html" title="next chapter">Noteworthy in Version 1.2.4</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/new_and_noteworthy_v1.2.5.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy; Copyright 2012-2015, Benno Rice, Richard Jones and Jens Engel.
+    </div>
+    <a href="https://github.com/behave/behave" class="github">
+      <img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/38ef81f8aca64bb9a64448d0d70f1308ef5341ab/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6461726b626c75655f3132313632312e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png">
+    </a>
+  </body>
+</html>

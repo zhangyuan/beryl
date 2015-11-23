@@ -1,0 +1,270 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>6. Page Objects &mdash; Selenium Python Bindings 2 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '2',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Selenium Python Bindings 2 documentation" href="index.html" />
+    <link rel="next" title="7. WebDriver API" href="api.html" />
+    <link rel="prev" title="5. Waits" href="waits.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="api.html" title="7. WebDriver API"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="waits.html" title="5. Waits"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">Selenium Python Bindings 2 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="page-objects">
+<span id="id1"></span><h1>6. Page Objects<a class="headerlink" href="#page-objects" title="Permalink to this headline">¶</a></h1>
+<p>This chapter is a tutorial introduction to page objects design
+pattern.  A page object represents an area in the web application user
+interface that your test is interacting.</p>
+<p>Benefits of using page object pattern:</p>
+<ul class="simple">
+<li>Creating reusable code that can be shared across multiple test cases</li>
+<li>Reducing the amount of duplicated code</li>
+<li>If the user interface changes, the fix needs changes in only one place</li>
+</ul>
+<div class="section" id="test-case">
+<h2>6.1. Test case<a class="headerlink" href="#test-case" title="Permalink to this headline">¶</a></h2>
+<p>Here is a test case which searches for a word in python.org website
+and ensure some results are found.</p>
+<div class="highlight-python"><div class="highlight"><pre>import unittest
+from selenium import webdriver
+import page
+
+class PythonOrgSearch(unittest.TestCase):
+    &quot;&quot;&quot;A sample test class to show how page object works&quot;&quot;&quot;
+
+    def setUp(self):
+        self.driver = webdriver.Firefox()
+        self.driver.get(&quot;http://www.python.org&quot;)
+
+    def test_search_in_python_org(self):
+        &quot;&quot;&quot;
+        Tests python.org search feature. Searches for the word &quot;pycon&quot; then verified that some results show up.
+        Note that it does not look for any particular text in search results page. This test verifies that
+        the results were not empty.
+        &quot;&quot;&quot;
+
+        #Load the main page. In this case the home page of Python.og.
+        main_page = page.MainPage(self.driver)
+        #Checks if the word &quot;Python&quot; is in title
+        assert main_page.is_title_matches(), &quot;python.org title doesn&#39;t match.&quot;
+        #Sets the text of search textbox to &quot;pycon&quot;
+        main_page.search_text_element = &quot;pycon&quot;
+        main_page.click_go_button()
+        search_results_page = page.SearchResultsPage(self.driver)
+        #Verifies that the results page is not empty
+            assert search_results_page.is_results_found(), &quot;No results found.&quot;
+
+    def tearDown(self):
+        self.driver.close()
+
+if __name__ == &quot;__main__&quot;:
+    unittest.main()
+</pre></div>
+</div>
+</div>
+<div class="section" id="page-object-classes">
+<h2>6.2. Page object classes<a class="headerlink" href="#page-object-classes" title="Permalink to this headline">¶</a></h2>
+<p>The page object pattern intends creating an object for each web page.
+By following this technique a layer of separation between the test
+code and technical implementsation is created.</p>
+<p>The <tt class="docutils literal"><span class="pre">page.py</span></tt> will look like this:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">element</span> <span class="kn">import</span> <span class="n">BasePageElement</span>
+<span class="kn">from</span> <span class="nn">locators</span> <span class="kn">import</span> <span class="n">MainPageLocators</span>
+
+<span class="k">class</span> <span class="nc">SearchTextElement</span><span class="p">(</span><span class="n">BasePageElement</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;This class gets the search text from the specified locator&quot;&quot;&quot;</span>
+
+    <span class="c">#The locator for search box where search string is entered</span>
+    <span class="n">locator</span> <span class="o">=</span> <span class="s">&#39;q&#39;</span>
+
+
+<span class="k">class</span> <span class="nc">BasePage</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Base class to initialize the base page that will be called from all pages&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">driver</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">driver</span> <span class="o">=</span> <span class="n">driver</span>
+
+
+<span class="k">class</span> <span class="nc">MainPage</span><span class="p">(</span><span class="n">BasePage</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Home page action methods come here. I.e. Python.org&quot;&quot;&quot;</span>
+
+    <span class="c">#Declares a variable that will contain the retrieved text</span>
+    <span class="n">search_text_element</span> <span class="o">=</span> <span class="n">SearchTextElement</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">is_title_matches</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Verifies that the hardcoded text &quot;Python&quot; appears in page title&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s">&quot;Python&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">driver</span><span class="o">.</span><span class="n">title</span>
+
+    <span class="k">def</span> <span class="nf">click_go_button</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Triggers the search&quot;&quot;&quot;</span>
+        <span class="n">element</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">driver</span><span class="o">.</span><span class="n">find_element</span><span class="p">(</span><span class="o">*</span><span class="n">MainPageLocators</span><span class="o">.</span><span class="n">GO_BUTTON</span><span class="p">)</span>
+        <span class="n">element</span><span class="o">.</span><span class="n">click</span><span class="p">()</span>
+
+
+<span class="k">class</span> <span class="nc">SearchResultsPage</span><span class="p">(</span><span class="n">BasePage</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Search results page action methods come here&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">is_results_found</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c"># Probably should search for this text in the specific page</span>
+        <span class="c"># element, but as for now it works fine</span>
+        <span class="k">return</span> <span class="s">&quot;No results found.&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">driver</span><span class="o">.</span><span class="n">page_source</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="page-elements">
+<h2>6.3. Page elements<a class="headerlink" href="#page-elements" title="Permalink to this headline">¶</a></h2>
+<p>The <tt class="docutils literal"><span class="pre">element.py</span></tt> will look like this:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">selenium.webdriver.support.ui</span> <span class="kn">import</span> <span class="n">WebDriverWait</span>
+
+
+<span class="k">class</span> <span class="nc">BasePageElement</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Base page class that is initialized on every page object class.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__set__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Sets the text to the value supplied&quot;&quot;&quot;</span>
+        <span class="n">driver</span> <span class="o">=</span> <span class="n">obj</span><span class="o">.</span><span class="n">driver</span>
+        <span class="n">WebDriverWait</span><span class="p">(</span><span class="n">driver</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span><span class="o">.</span><span class="n">until</span><span class="p">(</span>
+            <span class="k">lambda</span> <span class="n">driver</span><span class="p">:</span> <span class="n">driver</span><span class="o">.</span><span class="n">find_element_by_name</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">locator</span><span class="p">))</span>
+        <span class="n">driver</span><span class="o">.</span><span class="n">find_element_by_name</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">locator</span><span class="p">)</span><span class="o">.</span><span class="n">send_keys</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__get__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">owner</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Gets the text of the specified object&quot;&quot;&quot;</span>
+        <span class="n">driver</span> <span class="o">=</span> <span class="n">obj</span><span class="o">.</span><span class="n">driver</span>
+        <span class="n">WebDriverWait</span><span class="p">(</span><span class="n">driver</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span><span class="o">.</span><span class="n">until</span><span class="p">(</span>
+            <span class="k">lambda</span> <span class="n">driver</span><span class="p">:</span> <span class="n">driver</span><span class="o">.</span><span class="n">find_element_by_name</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">locator</span><span class="p">))</span>
+        <span class="n">element</span> <span class="o">=</span> <span class="n">driver</span><span class="o">.</span><span class="n">find_element_by_name</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">locator</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">element</span><span class="o">.</span><span class="n">get_attribute</span><span class="p">(</span><span class="s">&quot;value&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="locators">
+<h2>6.4. Locators<a class="headerlink" href="#locators" title="Permalink to this headline">¶</a></h2>
+<p>One of the practices is to separate the locator strings from the place
+where they are being used.  In this example, locators of the same page
+belong to same class.</p>
+<p>The <tt class="docutils literal"><span class="pre">locators.py</span></tt> will look like this:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">selenium.webdriver.common.by</span> <span class="kn">import</span> <span class="n">By</span>
+
+<span class="k">class</span> <span class="nc">MainPageLocators</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;A class for main page locators. All main page locators should come here&quot;&quot;&quot;</span>
+    <span class="n">GO_BUTTON</span> <span class="o">=</span> <span class="p">(</span><span class="n">By</span><span class="o">.</span><span class="n">ID</span><span class="p">,</span> <span class="s">&#39;submit&#39;</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">SearchResultsPageLocators</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;A class for search results locators. All search results locators should come here&quot;&quot;&quot;</span>
+    <span class="k">pass</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">6. Page Objects</a><ul>
+<li><a class="reference internal" href="#test-case">6.1. Test case</a></li>
+<li><a class="reference internal" href="#page-object-classes">6.2. Page object classes</a></li>
+<li><a class="reference internal" href="#page-elements">6.3. Page elements</a></li>
+<li><a class="reference internal" href="#locators">6.4. Locators</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="waits.html"
+                        title="previous chapter">5. Waits</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="api.html"
+                        title="next chapter">7. WebDriver API</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/page-objects.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="api.html" title="7. WebDriver API"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="waits.html" title="5. Waits"
+             >previous</a> |</li>
+        <li><a href="index.html">Selenium Python Bindings 2 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, Baiju Muthukadan.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>

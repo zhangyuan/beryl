@@ -1,0 +1,186 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Comparison With Other Tools &mdash; behave 1.2.6.dev0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/flasky.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.2.6.dev0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="behave 1.2.6.dev0 documentation" href="index.html" />
+    <link rel="next" title="New and Noteworthy" href="new_and_noteworthy.html" />
+    <link rel="prev" title="Django Test Integration" href="django.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="new_and_noteworthy.html" title="New and Noteworthy"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="django.html" title="Django Test Integration"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">behave 1.2.6.dev0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="comparison-with-other-tools">
+<h1>Comparison With Other Tools<a class="headerlink" href="#comparison-with-other-tools" title="Permalink to this headline">¶</a></h1>
+<p>There are other options for doing Gherkin-based BDD in Python. We&#8217;ve listed
+the main ones below and why we feel you&#8217;re better off using behave. Obviously
+this comes from our point of view and you may disagree. That&#8217;s cool. We&#8217;re
+not worried whichever way you go.</p>
+<p>This page may be out of date as the projects mentioned will almost certainly
+change over time. If anything on this page is out of date, please contact us.</p>
+<div class="section" id="cucumber">
+<h2><a class="reference external" href="http://cukes.info/">Cucumber</a><a class="headerlink" href="#cucumber" title="Permalink to this headline">¶</a></h2>
+<p>You can actually use Cucumber to run test code written in Python. It uses
+&#8220;rubypython&#8221; (dead) to fire up a Python interpreter inside the Ruby process though and
+this can be somewhat brittle. Obviously we prefer to use something written in
+Python but if you&#8217;ve got an existing workflow based around Cucumber and you
+have code in multiple languages, Cucumber may be the one for you.</p>
+</div>
+<div class="section" id="lettuce">
+<h2><a class="reference external" href="http://lettuce.it/">Lettuce</a><a class="headerlink" href="#lettuce" title="Permalink to this headline">¶</a></h2>
+<p><a class="reference external" href="https://pypi.python.org/pypi/lettuce">lettuce</a> is similar to behave in that it&#8217;s a fairly straight port of
+the basic functionality of <a class="reference external" href="http://cukes.info/">Cucumber</a>. The main differences with behave are:</p>
+<ul class="simple">
+<li>Single decorator for step definitions, <tt class="docutils literal"><span class="pre">&#64;step</span></tt>.</li>
+<li>The context variable, <tt class="docutils literal"><span class="pre">world</span></tt>, is simply a shared holder of attributes.
+It never gets cleaned up during the run.</li>
+<li>Hooks are declared using decorators rather than as simple functions.</li>
+<li>No support for tags.</li>
+<li>Step definition code files can be anywhere in the feature directory
+hierarchy.</li>
+</ul>
+<p>The issues we had with Lettuce that stopped us using it were:</p>
+<ul class="simple">
+<li>Lack of tags (which are supported by now, at least since v0.2.20).</li>
+<li>The hooks functionality was patchy. For instance it was very hard to clean
+up the <tt class="docutils literal"><span class="pre">world</span></tt> variable between scenario outlines. Behave clears the
+scenario-level context between outlines automatically.</li>
+<li>Lettuce&#8217;s handling of stdout would occasionally cause it to crash mid-run in
+such a way that cleanup hooks were never run.</li>
+<li>Lettuce uses import hackery so .pyc files are left around and the module
+namespace is polluted.</li>
+</ul>
+</div>
+<div class="section" id="freshen">
+<h2><a class="reference internal" href="#freshen">Freshen</a><a class="headerlink" href="#freshen" title="Permalink to this headline">¶</a></h2>
+<p><a class="reference external" href="https://pypi.python.org/pypi/freshen">freshen</a> is a plugin for <a class="reference external" href="https://pypi.python.org/pypi/nose">nose</a> that implements a
+Gherkin-style language with Python step definitions.
+The main differences with behave are:</p>
+<ul class="simple">
+<li>Operates as a plugin for nose, and is thus tied to the nose runner and its
+output model.</li>
+<li>Has some additions to its Gherkin syntax allowing it to specify specific step
+definition modules for each feature.</li>
+<li>Has separate context objects for various levels: <tt class="docutils literal"><span class="pre">glc</span></tt>, <tt class="docutils literal"><span class="pre">ftc</span></tt> and
+<tt class="docutils literal"><span class="pre">scc</span></tt>. These relate to global, feature and scenario levels respectively.</li>
+</ul>
+<p>The issues we had with Freshen that stopped us using it were:</p>
+<ul class="simple">
+<li>The integration with the nose runner made it quite hard to properly debug
+how and why tests were failing. Quite often you&#8217;d get a rather cryptic
+message with the actual exception having been swallowed.</li>
+<li>The feature-specific step includes could lead to specific sets of step
+definitions for each feature despite them warning against doing that.</li>
+<li>The output being handled by nose meant that you couldn&#8217;t do cucumber-style
+output without the addition of more plugins.</li>
+<li>The context variable names are cryptic and moving context data from one
+level to another takes a certain amount of work finding and renaming. The
+behave <cite>context</cite> variable is much more flexible.</li>
+<li>Step functions must have unique names, even though they&#8217;re decorated to
+match different strings.</li>
+<li>As with Lettuce, Freshen uses import hackery so .pyc files are left
+around and the module namespace is polluted.</li>
+<li>Only Before and no contextual before/after control, thus requiring use of
+atexit for teardown operations and no fine-grained control.</li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="_static/behave_logo1.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Comparison With Other Tools</a><ul>
+<li><a class="reference internal" href="#cucumber">Cucumber</a></li>
+<li><a class="reference internal" href="#lettuce">Lettuce</a></li>
+<li><a class="reference internal" href="#freshen">Freshen</a></li>
+</ul>
+</li>
+</ul>
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="django.html" title="previous chapter">Django Test Integration</a></li>
+      <li>Next: <a href="new_and_noteworthy.html" title="next chapter">New and Noteworthy</a></li>
+  </ul></li>
+</ul>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/comparison.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy; Copyright 2012-2015, Benno Rice, Richard Jones and Jens Engel.
+    </div>
+    <a href="https://github.com/behave/behave" class="github">
+      <img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/38ef81f8aca64bb9a64448d0d70f1308ef5341ab/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6461726b626c75655f3132313632312e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png">
+    </a>
+  </body>
+</html>

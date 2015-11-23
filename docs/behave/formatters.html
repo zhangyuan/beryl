@@ -1,0 +1,236 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Formatters and Reporters &mdash; behave 1.2.6.dev0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/flasky.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.2.6.dev0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="behave 1.2.6.dev0 documentation" href="index.html" />
+    <link rel="up" title="Appendix" href="appendix.html" />
+    <link rel="next" title="Context Attributes" href="context_attributes.html" />
+    <link rel="prev" title="Appendix" href="appendix.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="context_attributes.html" title="Context Attributes"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="appendix.html" title="Appendix"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">behave 1.2.6.dev0 documentation</a> &raquo;</li>
+          <li><a href="appendix.html" accesskey="U">Appendix</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="formatters-and-reporters">
+<span id="id-appendix-formatters"></span><h1>Formatters and Reporters<a class="headerlink" href="#formatters-and-reporters" title="Permalink to this headline">¶</a></h1>
+<p><a class="reference external" href="https://pypi.python.org/pypi/behave">behave</a> provides 2 different concepts for reporting results of a test run:</p>
+<blockquote>
+<div><ul class="simple">
+<li>formatters</li>
+<li>reporters</li>
+</ul>
+</div></blockquote>
+<p>A slightly different interface is provided for each &#8220;formatter&#8221; concept.
+The <tt class="docutils literal"><span class="pre">Formatter</span></tt> is informed about each step that is taken.
+The <tt class="docutils literal"><span class="pre">Reporter</span></tt> has a more coarse-grained API.</p>
+<div class="section" id="formatters">
+<h2>Formatters<a class="headerlink" href="#formatters" title="Permalink to this headline">¶</a></h2>
+<p>The following formatters are currently supported:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="16%" />
+<col width="9%" />
+<col width="74%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Name</th>
+<th class="head">Mode</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>help</td>
+<td>normal</td>
+<td>Shows all registered formatters.</td>
+</tr>
+<tr class="row-odd"><td>json</td>
+<td>normal</td>
+<td>JSON dump of test run</td>
+</tr>
+<tr class="row-even"><td>json.pretty</td>
+<td>normal</td>
+<td>JSON dump of test run (human readable)</td>
+</tr>
+<tr class="row-odd"><td>plain</td>
+<td>normal</td>
+<td>Very basic formatter with maximum compatibility</td>
+</tr>
+<tr class="row-even"><td>pretty</td>
+<td>normal</td>
+<td>Standard colourised pretty formatter</td>
+</tr>
+<tr class="row-odd"><td>progress</td>
+<td>normal</td>
+<td>Shows dotted progress for each executed scenario.</td>
+</tr>
+<tr class="row-even"><td>progress2</td>
+<td>normal</td>
+<td>Shows dotted progress for each executed step.</td>
+</tr>
+<tr class="row-odd"><td>progress3</td>
+<td>normal</td>
+<td>Shows detailed progress for each step of a scenario.</td>
+</tr>
+<tr class="row-even"><td>rerun</td>
+<td>normal</td>
+<td>Emits scenario file locations of failing scenarios</td>
+</tr>
+<tr class="row-odd"><td>sphinx.steps</td>
+<td>dry-run</td>
+<td>Generate sphinx-based documentation for step definitions.</td>
+</tr>
+<tr class="row-even"><td>steps</td>
+<td>dry-run</td>
+<td>Shows step definitions (step implementations).</td>
+</tr>
+<tr class="row-odd"><td>steps.doc</td>
+<td>dry-run</td>
+<td>Shows documentation for step definitions.</td>
+</tr>
+<tr class="row-even"><td>steps.usage</td>
+<td>dry-run</td>
+<td>Shows how step definitions are used by steps (in feature files).</td>
+</tr>
+<tr class="row-odd"><td>tags</td>
+<td>dry-run</td>
+<td>Shows tags (and how often they are used).</td>
+</tr>
+<tr class="row-even"><td>tags.location</td>
+<td>dry-run</td>
+<td>Shows tags and the location where they are used.</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>You can use more that one formatter during a test run.
+But in general you have only one formatter that writes to <tt class="docutils literal"><span class="pre">stdout</span></tt>.</p>
+<p class="last">The &#8220;Mode&#8221; column indicates if a formatter is intended to be used in
+dry-run (<tt class="docutils literal"><span class="pre">--dry-run</span></tt> command-line option) or normal mode.</p>
+</div>
+</div>
+<div class="section" id="reporters">
+<h2>Reporters<a class="headerlink" href="#reporters" title="Permalink to this headline">¶</a></h2>
+<p>The following reporters are currently supported:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="18%" />
+<col width="82%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Name</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>junit</td>
+<td>Provides JUnit XML-like output.</td>
+</tr>
+<tr class="row-odd"><td>summary</td>
+<td>Provides a summary of the test run.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="_static/behave_logo1.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Formatters and Reporters</a><ul>
+<li><a class="reference internal" href="#formatters">Formatters</a></li>
+<li><a class="reference internal" href="#reporters">Reporters</a></li>
+</ul>
+</li>
+</ul>
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  <li><a href="appendix.html">Appendix</a><ul>
+      <li>Previous: <a href="appendix.html" title="previous chapter">Appendix</a></li>
+      <li>Next: <a href="context_attributes.html" title="next chapter">Context Attributes</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/formatters.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy; Copyright 2012-2015, Benno Rice, Richard Jones and Jens Engel.
+    </div>
+    <a href="https://github.com/behave/behave" class="github">
+      <img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/38ef81f8aca64bb9a64448d0d70f1308ef5341ab/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6461726b626c75655f3132313632312e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png">
+    </a>
+  </body>
+</html>

@@ -1,0 +1,1351 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Behave API Reference &mdash; behave 1.2.6.dev0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/flasky.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.2.6.dev0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="behave 1.2.6.dev0 documentation" href="index.html" />
+    <link rel="next" title="Django Test Integration" href="django.html" />
+    <link rel="prev" title="Using behave" href="behave.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="django.html" title="Django Test Integration"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="behave.html" title="Using behave"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">behave 1.2.6.dev0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="behave-api-reference">
+<span id="api"></span><h1>Behave API Reference<a class="headerlink" href="#behave-api-reference" title="Permalink to this headline">¶</a></h1>
+<p>This reference is meant for people actually writing step implementations
+for feature tests. It contains way more information than a typical step
+implementation will need: most implementations will only need to look at
+the basic implementation of <a class="reference internal" href="#step-functions">step functions</a> and <em>maybe</em>
+<a class="reference internal" href="#environment-file-functions">environment file functions</a>.</p>
+<p>The model stuff is for people getting really <em>serious</em> about their step
+implementations.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>Anywhere this document says &#8220;string&#8221; it means &#8220;unicode string&#8221; in
+Python 2.x</p>
+<p class="last"><em>behave</em> works exclusively with unicode strings internally.</p>
+</div>
+<div class="section" id="step-functions">
+<h2>Step Functions<a class="headerlink" href="#step-functions" title="Permalink to this headline">¶</a></h2>
+<p>Step functions are implemented in the Python modules present in your
+&#8220;steps&#8221; directory. All Python files (files ending in &#8221;.py&#8221;) in that
+directory will be imported to find step implementations. They are all
+loaded before <em>behave</em> starts executing your feature tests.</p>
+<p>Step functions are identified using step decorators. All step
+implementations <strong>must</strong> start with the import line:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">behave</span> <span class="kn">import</span> <span class="o">*</span>
+</pre></div>
+</div>
+<p>This imports several decorators defined by <em>behave</em> to allow you to
+identify your step functions. These are available in both PEP-8 (all
+lowercase) and traditional (title case) versions: &#8220;given&#8221;, &#8220;when&#8221;, &#8220;then&#8221;
+and the generic &#8220;step&#8221;. See the <a class="reference external" href="#from-behave-import-*">full list of variables imported</a> in the
+above statement.</p>
+<p>The decorators all take a single string argument: the string to match
+against the feature file step text <em>exactly</em>. So the following step
+implementation code:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="nd">@given</span><span class="p">(</span><span class="s">&#39;some known state&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">step_impl</span><span class="p">(</span><span class="n">context</span><span class="p">):</span>
+    <span class="n">set_up</span><span class="p">(</span><span class="n">some</span><span class="p">,</span> <span class="n">state</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>will match the &#8220;Given&#8221; step from the following feature:</p>
+<div class="highlight-gherkin"><div class="highlight"><pre><span class="k">Scenario:</span><span class="nf"> test something</span>
+<span class="k"> Given </span><span class="nf">some known state</span>
+<span class="nf">  then some observed outcome.</span>
+</pre></div>
+</div>
+<p><em>You don&#8217;t need to import the decorators</em>: they&#8217;re automatically available
+to your step implmentation modules as <a class="reference external" href="#step-global-variables">global variables</a>.</p>
+<p>Steps beginning with &#8220;and&#8221; or &#8220;but&#8221; in the feature file are renamed to take
+the name of their preceding keyword, so given the following feature file:</p>
+<div class="highlight-gherkin"><div class="highlight"><pre><span class="k">Given </span><span class="nf">some known state</span>
+<span class="nf">  and some other known state</span>
+<span class="nf"> when some action is taken</span>
+<span class="nf"> then some outcome is observed</span>
+<span class="nf">  but some other outcome is not observed.</span>
+</pre></div>
+</div>
+<p>the first &#8220;and&#8221; step will be renamed internally to &#8220;given&#8221; and <em>behave</em>
+will look for a step implementation decorated with either &#8220;given&#8221; or &#8220;step&#8221;:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="nd">@given</span><span class="p">(</span><span class="s">&#39;some other known state&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">step_impl</span><span class="p">(</span><span class="n">context</span><span class="p">):</span>
+   <span class="n">set_up</span><span class="p">(</span><span class="n">some</span><span class="p">,</span> <span class="n">other</span><span class="p">,</span> <span class="n">state</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>and similarly the &#8220;but&#8221; would be renamed internally to &#8220;then&#8221;. Multiple
+&#8220;and&#8221; or &#8220;but&#8221; steps in a row would inherit the non-&#8220;and&#8221; or &#8220;but&#8221; keyword.</p>
+<p>The function decorated by the step decorator will be passed at least one
+argument. The first argument is always the <a class="reference internal" href="#behave.runner.Context" title="behave.runner.Context"><tt class="xref py py-class docutils literal"><span class="pre">Context</span></tt></a>
+variable. Additional arguments come from <a class="reference internal" href="#step-parameters">step parameters</a>, if any.</p>
+<div class="section" id="step-parameters">
+<h3>Step Parameters<a class="headerlink" href="#step-parameters" title="Permalink to this headline">¶</a></h3>
+<p>You may additionally use <a class="reference external" href="tutorial.html#step-parameters">parameters</a> in your step names. These will be
+handled by either the default simple parser (<a class="reference external" href="https://pypi.python.org/pypi/parse">parse</a>),
+its extension &#8220;cfparse&#8221; or by regular expressions
+if you invoke <a class="reference internal" href="#behave.use_step_matcher" title="behave.use_step_matcher"><tt class="xref py py-func docutils literal"><span class="pre">use_step_matcher()</span></tt></a>.</p>
+<dl class="function">
+<dt id="behave.use_step_matcher">
+<tt class="descclassname">behave.</tt><tt class="descname">use_step_matcher</tt><big>(</big><em>name</em><big>)</big><a class="headerlink" href="#behave.use_step_matcher" title="Permalink to this definition">¶</a></dt>
+<dd><p>Change the parameter matcher used in parsing step text.</p>
+<p>The change is immediate and may be performed between step definitions in
+your step implementation modules - allowing adjacent steps to use different
+matchers if necessary.</p>
+<p>There are several parsers available in <em>behave</em> (by default):</p>
+<dl class="docutils">
+<dt><strong>parse</strong> (the default, based on: <a class="reference external" href="https://pypi.python.org/pypi/parse">parse</a>)</dt>
+<dd><p class="first">Provides a simple parser that replaces regular expressions for
+step parameters with a readable syntax like <tt class="docutils literal"><span class="pre">{param:Type}</span></tt>.
+The syntax is inspired by the Python builtin <tt class="docutils literal"><span class="pre">string.format()</span></tt>
+function.
+Step parameters must use the named fields syntax of <a class="reference external" href="https://pypi.python.org/pypi/parse">parse</a>
+in step definitions. The named fields are extracted,
+optionally type converted and then used as step function arguments.</p>
+<p class="last">Supports type conversions by using type converters
+(see <a class="reference internal" href="#behave.register_type" title="behave.register_type"><tt class="xref py py-func docutils literal"><span class="pre">register_type()</span></tt></a>).</p>
+</dd>
+<dt><strong>cfparse</strong> (extends: <a class="reference external" href="https://pypi.python.org/pypi/parse">parse</a>, requires: <a class="reference external" href="https://pypi.python.org/pypi/parse_type">parse_type</a>)</dt>
+<dd><p class="first">Provides an extended parser with &#8220;Cardinality Field&#8221; (CF) support.
+Automatically creates missing type converters for related cardinality
+as long as a type converter for cardinality=1 is provided.
+Supports parse expressions like:</p>
+<blockquote>
+<div><ul class="simple">
+<li><tt class="docutils literal"><span class="pre">{values:Type+}</span></tt> (cardinality=1..N, many)</li>
+<li><tt class="docutils literal"><span class="pre">{values:Type*}</span></tt> (cardinality=0..N, many0)</li>
+<li><tt class="docutils literal"><span class="pre">{value:Type?}</span></tt>  (cardinality=0..1, optional)</li>
+</ul>
+</div></blockquote>
+<p class="last">Supports type conversions (as above).</p>
+</dd>
+<dt><strong>re</strong></dt>
+<dd><p class="first">This uses full regular expressions to parse the clause text. You will
+need to use named groups &#8220;(?P&lt;name&gt;...)&#8221; to define the variables pulled
+from the text and passed to your <tt class="docutils literal"><span class="pre">step()</span></tt> function.</p>
+<p class="last">Type conversion is <strong>not supported</strong>.
+A step function writer may implement type conversion
+inside the step function (implementation).</p>
+</dd>
+</dl>
+<p>You may <a class="reference external" href="api.html#step-parameters">define your own matcher</a>.</p>
+</dd></dl>
+
+<p>You may add new types to the default parser by invoking
+<a class="reference internal" href="#behave.register_type" title="behave.register_type"><tt class="xref py py-func docutils literal"><span class="pre">register_type()</span></tt></a>.</p>
+<dl class="function">
+<dt id="behave.register_type">
+<tt class="descclassname">behave.</tt><tt class="descname">register_type</tt><big>(</big><em>**kw</em><big>)</big><a class="headerlink" href="#behave.register_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Registers a custom type that will be available to &#8220;parse&#8221;
+for type conversion during step matching.</p>
+<p>Converters should be supplied as <tt class="docutils literal"><span class="pre">name=callable</span></tt> arguments (or as dict).</p>
+<p>A type converter should follow <a class="reference external" href="https://pypi.python.org/pypi/parse">parse</a> module rules.
+In general, a type converter is a function that converts text (as string)
+into a value-type (type converted value).</p>
+<p>EXAMPLE:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">behave</span> <span class="kn">import</span> <span class="n">register_type</span><span class="p">,</span> <span class="n">given</span>
+<span class="kn">import</span> <span class="nn">parse</span>
+
+<span class="c"># -- TYPE CONVERTER: For a simple, positive integer number.</span>
+<span class="nd">@parse.with_pattern</span><span class="p">(</span><span class="s">r&quot;\d+&quot;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">parse_number</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
+    <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+
+<span class="c"># -- REGISTER TYPE-CONVERTER: With behave</span>
+<span class="n">register_type</span><span class="p">(</span><span class="n">Number</span><span class="o">=</span><span class="n">parse_number</span><span class="p">)</span>
+
+<span class="c"># -- STEP DEFINITIONS: Use type converter.</span>
+<span class="nd">@given</span><span class="p">(</span><span class="s">&#39;{amount:Number} vehicles&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">step_impl</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">amount</span><span class="p">):</span>
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">amount</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<p>You may define a new parameter matcher by subclassing
+<a class="reference internal" href="#behave.matchers.Matcher" title="behave.matchers.Matcher"><tt class="xref py py-class docutils literal"><span class="pre">behave.matchers.Matcher</span></tt></a> and registering it with
+<tt class="xref py py-attr docutils literal"><span class="pre">behave.matchers.matcher_mapping</span></tt> which is a dictionary of &#8220;matcher
+name&#8221; to <a class="reference internal" href="#behave.matchers.Matcher" title="behave.matchers.Matcher"><tt class="xref py py-class docutils literal"><span class="pre">Matcher</span></tt></a> class.</p>
+<dl class="class">
+<dt id="behave.matchers.Matcher">
+<em class="property">class </em><tt class="descclassname">behave.matchers.</tt><tt class="descname">Matcher</tt><big>(</big><em>func</em>, <em>string</em>, <em>step_type=None</em><big>)</big><a class="headerlink" href="#behave.matchers.Matcher" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pull parameters out of step names.</p>
+<dl class="attribute">
+<dt id="Matcher.string">
+<tt class="descname">string</tt><a class="headerlink" href="#Matcher.string" title="Permalink to this definition">¶</a></dt>
+<dd><p>The match pattern attached to the step function.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Matcher.func">
+<tt class="descname">func</tt><a class="headerlink" href="#Matcher.func" title="Permalink to this definition">¶</a></dt>
+<dd><p>The step function the pattern is being attached to.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="behave.matchers.Matcher.check_match">
+<tt class="descname">check_match</tt><big>(</big><em>step</em><big>)</big><a class="headerlink" href="#behave.matchers.Matcher.check_match" title="Permalink to this definition">¶</a></dt>
+<dd><p>Match me against the &#8220;step&#8221; name supplied.</p>
+<p>Return None if I don&#8217;t match otherwise return a list of matches as
+<a class="reference internal" href="#behave.model.Argument" title="behave.model.Argument"><tt class="xref py py-class docutils literal"><span class="pre">behave.model.Argument</span></tt></a> instances.</p>
+<p>The return value from this function will be converted into a
+<a class="reference internal" href="#behave.model.Match" title="behave.model.Match"><tt class="xref py py-class docutils literal"><span class="pre">behave.model.Match</span></tt></a> instance by <em>behave</em>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="behave.matchers.Matcher.describe">
+<tt class="descname">describe</tt><big>(</big><em>schema=None</em><big>)</big><a class="headerlink" href="#behave.matchers.Matcher.describe" title="Permalink to this definition">¶</a></dt>
+<dd><p>Provide a textual description of the step function/matcher object.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>schema</strong> &#8211; Text schema to use.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Textual description of this step definition (matcher).</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="behave.model.Argument">
+<em class="property">class </em><tt class="descclassname">behave.model.</tt><tt class="descname">Argument</tt><big>(</big><em>start</em>, <em>end</em>, <em>original</em>, <em>value</em>, <em>name=None</em><big>)</big><a class="headerlink" href="#behave.model.Argument" title="Permalink to this definition">¶</a></dt>
+<dd><p>An argument found in a <em>feature file</em> step name and extracted using
+step decorator <a class="reference external" href="tutorial.html#step-parameters">parameters</a>.</p>
+<p>The attributes are:</p>
+<dl class="attribute">
+<dt id="Argument.original">
+<tt class="descname">original</tt><a class="headerlink" href="#Argument.original" title="Permalink to this definition">¶</a></dt>
+<dd><p>The actual text matched in the step name.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Argument.value">
+<tt class="descname">value</tt><a class="headerlink" href="#Argument.value" title="Permalink to this definition">¶</a></dt>
+<dd><p>The potentially type-converted value of the argument.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Argument.name">
+<tt class="descname">name</tt><a class="headerlink" href="#Argument.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>The name of the argument. This will be None if the parameter is
+anonymous.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Argument.start">
+<tt class="descname">start</tt><a class="headerlink" href="#Argument.start" title="Permalink to this definition">¶</a></dt>
+<dd><p>The start index in the step name of the argument. Used for display.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Argument.end">
+<tt class="descname">end</tt><a class="headerlink" href="#Argument.end" title="Permalink to this definition">¶</a></dt>
+<dd><p>The end index in the step name of the argument. Used for display.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="behave.model.Match">
+<em class="property">class </em><tt class="descclassname">behave.model.</tt><tt class="descname">Match</tt><big>(</big><em>func</em>, <em>arguments=None</em><big>)</big><a class="headerlink" href="#behave.model.Match" title="Permalink to this definition">¶</a></dt>
+<dd><p>An parameter-matched <em>feature file</em> step name extracted using
+step decorator <a class="reference external" href="tutorial.html#step-parameters">parameters</a>.</p>
+<dl class="attribute">
+<dt id="Match.func">
+<tt class="descname">func</tt><a class="headerlink" href="#Match.func" title="Permalink to this definition">¶</a></dt>
+<dd><p>The step function that this match will be applied to.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Match.arguments">
+<tt class="descname">arguments</tt><a class="headerlink" href="#Match.arguments" title="Permalink to this definition">¶</a></dt>
+<dd><p>A list of <a class="reference internal" href="#behave.model.Argument" title="behave.model.Argument"><tt class="xref py py-class docutils literal"><span class="pre">behave.model.Argument</span></tt></a> instances containing the
+matched parameters from the step name.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="calling-steps-from-other-steps">
+<h3>Calling Steps From Other Steps<a class="headerlink" href="#calling-steps-from-other-steps" title="Permalink to this headline">¶</a></h3>
+<p>If you find you&#8217;d like your step implementation to invoke another step you
+may do so with the <a class="reference internal" href="#behave.runner.Context" title="behave.runner.Context"><tt class="xref py py-class docutils literal"><span class="pre">Context</span></tt></a> method
+<a class="reference internal" href="#behave.runner.Context.execute_steps" title="behave.runner.Context.execute_steps"><tt class="xref py py-func docutils literal"><span class="pre">execute_steps()</span></tt></a>.</p>
+<p>This function allows you to, for example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="nd">@when</span><span class="p">(</span><span class="s">&#39;I do the same thing as before&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">step_impl</span><span class="p">(</span><span class="n">context</span><span class="p">):</span>
+    <span class="n">context</span><span class="o">.</span><span class="n">execute_steps</span><span class="p">(</span><span class="s">&#39;&#39;&#39;</span>
+<span class="s">        when I press the big red button</span>
+<span class="s">         and I duck</span>
+<span class="s">    &#39;&#39;&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This will cause the &#8220;when I do the same thing as before&#8221; step to execute
+the other two steps as though they had also appeared in the scenario file.</p>
+</div>
+<div class="section" id="from-behave-import">
+<h3>from behave import *<a class="headerlink" href="#from-behave-import" title="Permalink to this headline">¶</a></h3>
+<p>The import statement:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">behave</span> <span class="kn">import</span> <span class="o">*</span>
+</pre></div>
+</div>
+<p>is written to introduce a restricted set of variables into your code:</p>
+<blockquote>
+<div><table border="1" class="docutils">
+<colgroup>
+<col width="33%" />
+<col width="14%" />
+<col width="53%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Name</th>
+<th class="head">Kind</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>given, when, then, step</td>
+<td>Decorator</td>
+<td>Decorators for step implementations.</td>
+</tr>
+<tr class="row-odd"><td>use_step_matcher(name)</td>
+<td>Function</td>
+<td>Selects current step matcher (parser).</td>
+</tr>
+<tr class="row-even"><td>register_type(Type=func)</td>
+<td>Function</td>
+<td>Registers a type converter.</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<p>See also the description in <a class="reference internal" href="#step-parameters">step parameters</a>.</p>
+</div>
+</div>
+<div class="section" id="environment-file-functions">
+<h2>Environment File Functions<a class="headerlink" href="#environment-file-functions" title="Permalink to this headline">¶</a></h2>
+<p>The environment.py module may define code to run before and after certain
+events during your testing:</p>
+<dl class="docutils">
+<dt><strong>before_step(context, step), after_step(context, step)</strong></dt>
+<dd>These run before and after every step. The step passed in is an instance
+of <a class="reference internal" href="#behave.model.Step" title="behave.model.Step"><tt class="xref py py-class docutils literal"><span class="pre">Step</span></tt></a>.</dd>
+<dt><strong>before_scenario(context, scenario), after_scenario(context, scenario)</strong></dt>
+<dd>These run before and after each scenario is run. The scenario passed in is an
+instance of <a class="reference internal" href="#behave.model.Scenario" title="behave.model.Scenario"><tt class="xref py py-class docutils literal"><span class="pre">Scenario</span></tt></a>.</dd>
+<dt><strong>before_feature(context, feature), after_feature(context, feature)</strong></dt>
+<dd>These run before and after each feature file is exercised. The feature
+passed in is an instance of <a class="reference internal" href="#behave.model.Feature" title="behave.model.Feature"><tt class="xref py py-class docutils literal"><span class="pre">Feature</span></tt></a>.</dd>
+<dt><strong>before_tag(context, tag), after_tag(context, tag)</strong></dt>
+<dd><p class="first">These run before and after a section tagged with the given name. They are
+invoked for each tag encountered in the order they&#8217;re found in the
+feature file. See  <a class="reference internal" href="tutorial.html#controlling-things-with-tags"><em>Controlling Things With Tags</em></a>. The tag passed in is
+an instance of <a class="reference internal" href="#behave.model.Tag" title="behave.model.Tag"><tt class="xref py py-class docutils literal"><span class="pre">Tag</span></tt></a> and because it&#8217;s a subclass of
+string you can do simple tests like:</p>
+<div class="last highlight-python"><div class="highlight"><pre><span class="c"># -- ASSUMING: tags @browser.chrome or @browser.any are used.</span>
+<span class="k">if</span> <span class="n">tag</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s">&quot;browser.&quot;</span><span class="p">):</span>
+    <span class="n">browser_type</span> <span class="o">=</span> <span class="n">tag</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s">&quot;browser.&quot;</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">browser_type</span> <span class="o">==</span> <span class="s">&quot;chrome&quot;</span><span class="p">:</span>
+       <span class="n">context</span><span class="o">.</span><span class="n">browser</span> <span class="o">=</span> <span class="n">webdriver</span><span class="o">.</span><span class="n">Chrome</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+       <span class="n">context</span><span class="o">.</span><span class="n">browser</span> <span class="o">=</span> <span class="n">webdriver</span><span class="o">.</span><span class="n">PlainVanilla</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd>
+<dt><strong>before_all(context), after_all(context)</strong></dt>
+<dd>These run before and after the whole shooting match.</dd>
+</dl>
+<div class="section" id="some-useful-environment-ideas">
+<h3>Some Useful Environment Ideas<a class="headerlink" href="#some-useful-environment-ideas" title="Permalink to this headline">¶</a></h3>
+<p>Here&#8217;s some ideas for things you could use the environment for.</p>
+<div class="section" id="logging-setup">
+<h4>Logging Setup<a class="headerlink" href="#logging-setup" title="Permalink to this headline">¶</a></h4>
+<p>The following recipe works in all cases (log-capture on or off).
+If you want to use/configure logging, you should use the following snippet:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># -- FILE:features/environment.py</span>
+<span class="k">def</span> <span class="nf">before_all</span><span class="p">(</span><span class="n">context</span><span class="p">):</span>
+    <span class="c"># -- SET LOG LEVEL: behave --logging-level=ERROR ...</span>
+    <span class="c"># on behave command-line or in &quot;behave.ini&quot;.</span>
+    <span class="n">context</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">setup_logging</span><span class="p">()</span>
+
+    <span class="c"># -- ALTERNATIVE: Setup logging with a configuration file.</span>
+    <span class="c"># context.config.setup_logging(configfile=&quot;behave_logging.ini&quot;)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="capture-logging-in-hooks">
+<h4>Capture Logging in Hooks<a class="headerlink" href="#capture-logging-in-hooks" title="Permalink to this headline">¶</a></h4>
+<p>If you wish to capture any logging generated during an environment
+hook function&#8217;s invocation, you may use the
+<a class="reference internal" href="#behave.log_capture.capture" title="behave.log_capture.capture"><tt class="xref py py-func docutils literal"><span class="pre">capture()</span></tt></a> decorator, like:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># -- FILE:features/environment.py</span>
+<span class="kn">from</span> <span class="nn">behave.log_capture</span> <span class="kn">import</span> <span class="n">capture</span>
+
+<span class="nd">@capture</span>
+<span class="k">def</span> <span class="nf">after_scenario</span><span class="p">(</span><span class="n">context</span><span class="p">):</span>
+    <span class="o">...</span>
+</pre></div>
+</div>
+<p>This will capture any logging done during the call to <em>after_scenario</em>
+and print it out.</p>
+</div>
+<div class="section" id="detecting-that-user-code-overwrites-behave-context-attributes">
+<h4>Detecting that user code overwrites behave Context attributes<a class="headerlink" href="#detecting-that-user-code-overwrites-behave-context-attributes" title="Permalink to this headline">¶</a></h4>
+<p>The <em>context</em> variable in all cases is an instance of
+<a class="reference internal" href="#behave.runner.Context" title="behave.runner.Context"><tt class="xref py py-class docutils literal"><span class="pre">behave.runner.Context</span></tt></a>.</p>
+<dl class="class">
+<dt id="behave.runner.Context">
+<em class="property">class </em><tt class="descclassname">behave.runner.</tt><tt class="descname">Context</tt><big>(</big><em>runner</em><big>)</big><a class="headerlink" href="#behave.runner.Context" title="Permalink to this definition">¶</a></dt>
+<dd><p>Hold contextual information during the running of tests.</p>
+<p>This object is a place to store information related to the tests you&#8217;re
+running. You may add arbitrary attributes to it of whatever value you need.</p>
+<p>During the running of your tests the object will have additional layers of
+namespace added and removed automatically. There is a &#8220;root&#8221; namespace and
+additional namespaces for features and scenarios.</p>
+<p>Certain names are used by <em>behave</em>; be wary of using them yourself as
+<em>behave</em> may overwrite the value you set. These names are:</p>
+<dl class="attribute">
+<dt id="Context.feature">
+<tt class="descname">feature</tt><a class="headerlink" href="#Context.feature" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is set when we start testing a new feature and holds a
+<a class="reference internal" href="#behave.model.Feature" title="behave.model.Feature"><tt class="xref py py-class docutils literal"><span class="pre">Feature</span></tt></a>. It will not be present outside of a
+feature (i.e. within the scope of the environment before_all and
+after_all).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Context.scenario">
+<tt class="descname">scenario</tt><a class="headerlink" href="#Context.scenario" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is set when we start testing a new scenario (including the
+individual scenarios of a scenario outline) and holds a
+<a class="reference internal" href="#behave.model.Scenario" title="behave.model.Scenario"><tt class="xref py py-class docutils literal"><span class="pre">Scenario</span></tt></a>. It will not be present outside of the
+scope of a scenario.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Context.tags">
+<tt class="descname">tags</tt><a class="headerlink" href="#Context.tags" title="Permalink to this definition">¶</a></dt>
+<dd><p>The current set of active tags (as a Python set containing instances of
+<a class="reference internal" href="#behave.model.Tag" title="behave.model.Tag"><tt class="xref py py-class docutils literal"><span class="pre">Tag</span></tt></a> which are basically just glorified strings)
+combined from the feature and scenario. This attribute will not be
+present outside of a feature scope.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Context.aborted">
+<tt class="descname">aborted</tt><a class="headerlink" href="#Context.aborted" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is set to true in the root namespace when the user aborts a test run
+(<tt class="xref py py-exc docutils literal"><span class="pre">KeyboardInterrupt</span></tt> exception). Initially: False.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Context.failed">
+<tt class="descname">failed</tt><a class="headerlink" href="#Context.failed" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is set to true in the root namespace as soon as a step fails.
+Initially: False.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Context.table">
+<tt class="descname">table</tt><a class="headerlink" href="#Context.table" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is set at the step level and holds any <a class="reference internal" href="#behave.model.Table" title="behave.model.Table"><tt class="xref py py-class docutils literal"><span class="pre">Table</span></tt></a>
+associated with the step.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Context.text">
+<tt class="descname">text</tt><a class="headerlink" href="#Context.text" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is set at the step level and holds any multiline text associated
+with the step.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Context.config">
+<tt class="descname">config</tt><a class="headerlink" href="#Context.config" title="Permalink to this definition">¶</a></dt>
+<dd><p>The configuration of <em>behave</em> as determined by configuration files and
+command-line options. The attributes of this object are the same as the
+<a class="reference external" href="behave.html#configuration-files">configuration file settion names</a>.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Context.active_outline">
+<tt class="descname">active_outline</tt><a class="headerlink" href="#Context.active_outline" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is set for each scenario in a scenario outline and references the
+<a class="reference internal" href="#behave.model.Row" title="behave.model.Row"><tt class="xref py py-class docutils literal"><span class="pre">Row</span></tt></a> that is active for the current scenario. It is
+present mostly for debugging, but may be useful otherwise.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Context.log_capture">
+<tt class="descname">log_capture</tt><a class="headerlink" href="#Context.log_capture" title="Permalink to this definition">¶</a></dt>
+<dd><p>If logging capture is enabled then this attribute contains the captured
+logging as an instance of <a class="reference internal" href="#behave.log_capture.LoggingCapture" title="behave.log_capture.LoggingCapture"><tt class="xref py py-class docutils literal"><span class="pre">LoggingCapture</span></tt></a>.
+It is not present if logging is not being captured.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Context.stdout_capture">
+<tt class="descname">stdout_capture</tt><a class="headerlink" href="#Context.stdout_capture" title="Permalink to this definition">¶</a></dt>
+<dd><p>If stdout capture is enabled then this attribute contains the captured
+output as a StringIO instance. It is not present if stdout is not being
+captured.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Context.stderr_capture">
+<tt class="descname">stderr_capture</tt><a class="headerlink" href="#Context.stderr_capture" title="Permalink to this definition">¶</a></dt>
+<dd><p>If stderr capture is enabled then this attribute contains the captured
+output as a StringIO instance. It is not present if stderr is not being
+captured.</p>
+</dd></dl>
+
+<p>If an attempt made by user code to overwrite one of these variables, or
+indeed by <em>behave</em> to overwite a user-set variable, then a
+<a class="reference internal" href="#behave.runner.ContextMaskWarning" title="behave.runner.ContextMaskWarning"><tt class="xref py py-class docutils literal"><span class="pre">behave.runner.ContextMaskWarning</span></tt></a> warning will be raised.</p>
+<p>You may use the &#8220;in&#8221; operator to test whether a certain value has been set
+on the context, for example:</p>
+<blockquote>
+<div>&#8216;feature&#8217; in context</div></blockquote>
+<p>checks whether there is a &#8220;feature&#8221; value in the context.</p>
+<p>Values may be deleted from the context using &#8220;del&#8221; but only at the level
+they are set. You can&#8217;t delete a value set by a feature at a scenario level
+but you can delete a value set for a scenario in that scenario.</p>
+<dl class="method">
+<dt id="behave.runner.Context.execute_steps">
+<tt class="descname">execute_steps</tt><big>(</big><em>steps_text</em><big>)</big><a class="headerlink" href="#behave.runner.Context.execute_steps" title="Permalink to this definition">¶</a></dt>
+<dd><p>The steps identified in the &#8220;steps&#8221; text string will be parsed and
+executed in turn just as though they were defined in a feature file.</p>
+<p>If the execute_steps call fails (either through error or failure
+assertion) then the step invoking it will fail.</p>
+<p>ValueError will be raised if this is invoked outside a feature context.</p>
+<p>Returns boolean False if the steps are not parseable, True otherwise.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="behave.runner.ContextMaskWarning">
+<em class="property">class </em><tt class="descclassname">behave.runner.</tt><tt class="descname">ContextMaskWarning</tt><a class="headerlink" href="#behave.runner.ContextMaskWarning" title="Permalink to this definition">¶</a></dt>
+<dd><p>Raised if a context variable is being overwritten in some situations.</p>
+<p>If the variable was originally set by user code then this will be raised if
+<em>behave</em> overwites the value.</p>
+<p>If the variable was originally set by <em>behave</em> then this will be raised if
+user code overwites the value.</p>
+</dd></dl>
+
+</div>
+</div>
+</div>
+<div class="section" id="runner-operation">
+<h2>Runner Operation<a class="headerlink" href="#runner-operation" title="Permalink to this headline">¶</a></h2>
+<p>Given all the code that could be run by <em>behave</em>, this is the order in
+which that code is invoked (if they exist.)</p>
+<div class="highlight-python"><div class="highlight"><pre>before_all
+for feature in all_features:
+    before_feature
+    for scenario in feature.scenarios:
+        before_scenario
+        for step in scenario.steps:
+            before_step
+                step.run()
+            after_step
+        after_scenario
+    after_feature
+after_all
+</pre></div>
+</div>
+<p>If the feature contains scenario outlines then there is an additional loop
+over all the scenarios in the outline making the running look like this:</p>
+<div class="highlight-python"><div class="highlight"><pre>before_all
+for feature in all_features:
+    before_feature
+    for outline in feature.scenarios:
+        for scenario in outline.scenarios:
+            before_scenario
+            for step in scenario.steps:
+                before_step
+                    step.run()
+                after_step
+            after_scenario
+    after_feature
+after_all
+</pre></div>
+</div>
+</div>
+<div class="section" id="model-objects">
+<h2>Model Objects<a class="headerlink" href="#model-objects" title="Permalink to this headline">¶</a></h2>
+<p>The feature, scenario and step objects represent the information parsed
+from the feature file. They have a number of common attributes:</p>
+<dl class="docutils">
+<dt><strong>keyword</strong></dt>
+<dd>&#8220;Feature&#8221;, &#8220;Scenario&#8221;, &#8220;Given&#8221;, etc.</dd>
+<dt><strong>name</strong></dt>
+<dd>The name of the step (the text after the keyword.)</dd>
+<dt><strong>filename</strong> and <strong>line</strong></dt>
+<dd>The file name (or &#8220;&lt;string&gt;&#8221;) and line number of the statement.</dd>
+</dl>
+<p>The structure of model objects parsed from a <em>feature file</em> will typically
+be:</p>
+<pre class="literal-block">
+<a class="reference internal" href="#behave.model.Tag" title="behave.model.Tag"><tt class="xref py py-class docutils literal"><span class="pre">Tag</span></tt></a> (as <a class="reference internal" href="#Feature.tags" title="Feature.tags"><tt class="xref py py-attr docutils literal"><span class="pre">Feature.tags</span></tt></a>)
+<a class="reference internal" href="#behave.model.Feature" title="behave.model.Feature"><tt class="xref py py-class docutils literal"><span class="pre">Feature</span></tt></a> : TaggableModelElement
+    Description (as <a class="reference internal" href="#Feature.description" title="Feature.description"><tt class="xref py py-attr docutils literal"><span class="pre">Feature.description</span></tt></a>)
+
+    <a class="reference internal" href="#behave.model.Background" title="behave.model.Background"><tt class="xref py py-class docutils literal"><span class="pre">Background</span></tt></a>
+        <a class="reference internal" href="#behave.model.Step" title="behave.model.Step"><tt class="xref py py-class docutils literal"><span class="pre">Step</span></tt></a>
+            <a class="reference internal" href="#behave.model.Table" title="behave.model.Table"><tt class="xref py py-class docutils literal"><span class="pre">Table</span></tt></a> (as <a class="reference internal" href="#Step.table" title="Step.table"><tt class="xref py py-attr docutils literal"><span class="pre">Step.table</span></tt></a>)
+            MultiLineText (as <a class="reference internal" href="#Step.text" title="Step.text"><tt class="xref py py-attr docutils literal"><span class="pre">Step.text</span></tt></a>)
+
+    <a class="reference internal" href="#behave.model.Tag" title="behave.model.Tag"><tt class="xref py py-class docutils literal"><span class="pre">Tag</span></tt></a> (as <a class="reference internal" href="#Scenario.tags" title="Scenario.tags"><tt class="xref py py-attr docutils literal"><span class="pre">Scenario.tags</span></tt></a>)
+    <a class="reference internal" href="#behave.model.Scenario" title="behave.model.Scenario"><tt class="xref py py-class docutils literal"><span class="pre">Scenario</span></tt></a> : TaggableModelElement
+        Description (as <a class="reference internal" href="#Scenario.description" title="Scenario.description"><tt class="xref py py-attr docutils literal"><span class="pre">Scenario.description</span></tt></a>)
+        <a class="reference internal" href="#behave.model.Step" title="behave.model.Step"><tt class="xref py py-class docutils literal"><span class="pre">Step</span></tt></a>
+            <a class="reference internal" href="#behave.model.Table" title="behave.model.Table"><tt class="xref py py-class docutils literal"><span class="pre">Table</span></tt></a> (as <a class="reference internal" href="#Step.table" title="Step.table"><tt class="xref py py-attr docutils literal"><span class="pre">Step.table</span></tt></a>)
+            MultiLineText (as <a class="reference internal" href="#Step.text" title="Step.text"><tt class="xref py py-attr docutils literal"><span class="pre">Step.text</span></tt></a>)
+
+    <a class="reference internal" href="#behave.model.Tag" title="behave.model.Tag"><tt class="xref py py-class docutils literal"><span class="pre">Tag</span></tt></a> (as <a class="reference internal" href="#ScenarioOutline.tags" title="ScenarioOutline.tags"><tt class="xref py py-attr docutils literal"><span class="pre">ScenarioOutline.tags</span></tt></a>)
+    <a class="reference internal" href="#behave.model.ScenarioOutline" title="behave.model.ScenarioOutline"><tt class="xref py py-class docutils literal"><span class="pre">ScenarioOutline</span></tt></a> : TaggableModelElement
+        Description (as <a class="reference internal" href="#ScenarioOutline.description" title="ScenarioOutline.description"><tt class="xref py py-attr docutils literal"><span class="pre">ScenarioOutline.description</span></tt></a>)
+        <a class="reference internal" href="#behave.model.Step" title="behave.model.Step"><tt class="xref py py-class docutils literal"><span class="pre">Step</span></tt></a>
+            <a class="reference internal" href="#behave.model.Table" title="behave.model.Table"><tt class="xref py py-class docutils literal"><span class="pre">Table</span></tt></a> (as <a class="reference internal" href="#Step.table" title="Step.table"><tt class="xref py py-attr docutils literal"><span class="pre">Step.table</span></tt></a>)
+            MultiLineText (as <a class="reference internal" href="#Step.text" title="Step.text"><tt class="xref py py-attr docutils literal"><span class="pre">Step.text</span></tt></a>)
+        <a class="reference internal" href="#behave.model.Examples" title="behave.model.Examples"><tt class="xref py py-class docutils literal"><span class="pre">Examples</span></tt></a>
+            <a class="reference internal" href="#behave.model.Table" title="behave.model.Table"><tt class="xref py py-class docutils literal"><span class="pre">Table</span></tt></a>
+</pre>
+<dl class="class">
+<dt id="behave.model.Feature">
+<em class="property">class </em><tt class="descclassname">behave.model.</tt><tt class="descname">Feature</tt><big>(</big><em>filename</em>, <em>line</em>, <em>keyword</em>, <em>name</em>, <em>tags=None</em>, <em>description=None</em>, <em>scenarios=None</em>, <em>background=None</em><big>)</big><a class="headerlink" href="#behave.model.Feature" title="Permalink to this definition">¶</a></dt>
+<dd><p>A <a class="reference external" href="gherkin.html#features">feature</a> parsed from a <em>feature file</em>.</p>
+<p>The attributes are:</p>
+<dl class="attribute">
+<dt id="Feature.keyword">
+<tt class="descname">keyword</tt><a class="headerlink" href="#Feature.keyword" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is the keyword as seen in the <em>feature file</em>. In English this will
+be &#8220;Feature&#8221;.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Feature.name">
+<tt class="descname">name</tt><a class="headerlink" href="#Feature.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>The name of the feature (the text after &#8220;Feature&#8221;.)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Feature.description">
+<tt class="descname">description</tt><a class="headerlink" href="#Feature.description" title="Permalink to this definition">¶</a></dt>
+<dd><p>The description of the feature as seen in the <em>feature file</em>. This is
+stored as a list of text lines.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Feature.background">
+<tt class="descname">background</tt><a class="headerlink" href="#Feature.background" title="Permalink to this definition">¶</a></dt>
+<dd><p>The <a class="reference internal" href="#behave.model.Background" title="behave.model.Background"><tt class="xref py py-class docutils literal"><span class="pre">Background</span></tt></a> for this feature, if any.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Feature.scenarios">
+<tt class="descname">scenarios</tt><a class="headerlink" href="#Feature.scenarios" title="Permalink to this definition">¶</a></dt>
+<dd><p>A list of <a class="reference internal" href="#behave.model.Scenario" title="behave.model.Scenario"><tt class="xref py py-class docutils literal"><span class="pre">Scenario</span></tt></a> making up this feature.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Feature.tags">
+<tt class="descname">tags</tt><a class="headerlink" href="#Feature.tags" title="Permalink to this definition">¶</a></dt>
+<dd><p>A list of &#64;tags (as <a class="reference internal" href="#behave.model.Tag" title="behave.model.Tag"><tt class="xref py py-class docutils literal"><span class="pre">Tag</span></tt></a> which are basically
+glorified strings) attached to the feature.
+See <a class="reference internal" href="tutorial.html#controlling-things-with-tags"><em>Controlling Things With Tags</em></a>.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Feature.status">
+<tt class="descname">status</tt><a class="headerlink" href="#Feature.status" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read-Only. A summary status of the feature&#8217;s run. If read before the
+feature is fully tested it will return &#8220;untested&#8221; otherwise it will
+return one of:</p>
+<dl class="docutils">
+<dt>&#8220;untested&#8221;</dt>
+<dd>The feature was has not been completely tested yet.</dd>
+<dt>&#8220;skipped&#8221;</dt>
+<dd>One or more steps of this feature was passed over during testing.</dd>
+<dt>&#8220;passed&#8221;</dt>
+<dd>The feature was tested successfully.</dd>
+<dt>&#8220;failed&#8221;</dt>
+<dd>One or more steps of this feature failed.</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Feature.duration">
+<tt class="descname">duration</tt><a class="headerlink" href="#Feature.duration" title="Permalink to this definition">¶</a></dt>
+<dd><p>The time, in seconds, that it took to test this feature. If read before
+the feature is tested it will return 0.0.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Feature.filename">
+<tt class="descname">filename</tt><a class="headerlink" href="#Feature.filename" title="Permalink to this definition">¶</a></dt>
+<dd><p>The file name (or &#8220;&lt;string&gt;&#8221;) of the <em>feature file</em> where the feature
+was found.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Feature.line">
+<tt class="descname">line</tt><a class="headerlink" href="#Feature.line" title="Permalink to this definition">¶</a></dt>
+<dd><p>The line number of the <em>feature file</em> where the feature was found.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="behave.model.Background">
+<em class="property">class </em><tt class="descclassname">behave.model.</tt><tt class="descname">Background</tt><big>(</big><em>filename</em>, <em>line</em>, <em>keyword</em>, <em>name</em>, <em>steps=None</em><big>)</big><a class="headerlink" href="#behave.model.Background" title="Permalink to this definition">¶</a></dt>
+<dd><p>A <a class="reference external" href="gherkin.html#backgrounds">background</a> parsed from a <em>feature file</em>.</p>
+<p>The attributes are:</p>
+<dl class="attribute">
+<dt id="Background.keyword">
+<tt class="descname">keyword</tt><a class="headerlink" href="#Background.keyword" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is the keyword as seen in the <em>feature file</em>. In English this will
+typically be &#8220;Background&#8221;.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Background.name">
+<tt class="descname">name</tt><a class="headerlink" href="#Background.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>The name of the background (the text after &#8220;Background:&#8221;.)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Background.steps">
+<tt class="descname">steps</tt><a class="headerlink" href="#Background.steps" title="Permalink to this definition">¶</a></dt>
+<dd><p>A list of <a class="reference internal" href="#behave.model.Step" title="behave.model.Step"><tt class="xref py py-class docutils literal"><span class="pre">Step</span></tt></a> making up this background.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Background.duration">
+<tt class="descname">duration</tt><a class="headerlink" href="#Background.duration" title="Permalink to this definition">¶</a></dt>
+<dd><p>The time, in seconds, that it took to run this background. If read
+before the background is run it will return 0.0.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Background.filename">
+<tt class="descname">filename</tt><a class="headerlink" href="#Background.filename" title="Permalink to this definition">¶</a></dt>
+<dd><p>The file name (or &#8220;&lt;string&gt;&#8221;) of the <em>feature file</em> where the background
+was found.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Background.line">
+<tt class="descname">line</tt><a class="headerlink" href="#Background.line" title="Permalink to this definition">¶</a></dt>
+<dd><p>The line number of the <em>feature file</em> where the background was found.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="behave.model.Scenario">
+<em class="property">class </em><tt class="descclassname">behave.model.</tt><tt class="descname">Scenario</tt><big>(</big><em>filename</em>, <em>line</em>, <em>keyword</em>, <em>name</em>, <em>tags=None</em>, <em>steps=None</em>, <em>description=None</em><big>)</big><a class="headerlink" href="#behave.model.Scenario" title="Permalink to this definition">¶</a></dt>
+<dd><p>A <a class="reference external" href="gherkin.html#scenarios">scenario</a> parsed from a <em>feature file</em>.</p>
+<p>The attributes are:</p>
+<dl class="attribute">
+<dt id="Scenario.keyword">
+<tt class="descname">keyword</tt><a class="headerlink" href="#Scenario.keyword" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is the keyword as seen in the <em>feature file</em>. In English this will
+typically be &#8220;Scenario&#8221;.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Scenario.name">
+<tt class="descname">name</tt><a class="headerlink" href="#Scenario.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>The name of the scenario (the text after &#8220;Scenario:&#8221;.)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Scenario.description">
+<tt class="descname">description</tt><a class="headerlink" href="#Scenario.description" title="Permalink to this definition">¶</a></dt>
+<dd><p>The description of the scenario as seen in the <em>feature file</em>.
+This is stored as a list of text lines.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Scenario.feature">
+<tt class="descname">feature</tt><a class="headerlink" href="#Scenario.feature" title="Permalink to this definition">¶</a></dt>
+<dd><p>The <a class="reference internal" href="#behave.model.Feature" title="behave.model.Feature"><tt class="xref py py-class docutils literal"><span class="pre">Feature</span></tt></a> this scenario belongs to.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Scenario.steps">
+<tt class="descname">steps</tt><a class="headerlink" href="#Scenario.steps" title="Permalink to this definition">¶</a></dt>
+<dd><p>A list of <a class="reference internal" href="#behave.model.Step" title="behave.model.Step"><tt class="xref py py-class docutils literal"><span class="pre">Step</span></tt></a> making up this scenario.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Scenario.tags">
+<tt class="descname">tags</tt><a class="headerlink" href="#Scenario.tags" title="Permalink to this definition">¶</a></dt>
+<dd><p>A list of &#64;tags (as <a class="reference internal" href="#behave.model.Tag" title="behave.model.Tag"><tt class="xref py py-class docutils literal"><span class="pre">Tag</span></tt></a> which are basically
+glorified strings) attached to the scenario.
+See <a class="reference internal" href="tutorial.html#controlling-things-with-tags"><em>Controlling Things With Tags</em></a>.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Scenario.status">
+<tt class="descname">status</tt><a class="headerlink" href="#Scenario.status" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read-Only. A summary status of the scenario&#8217;s run. If read before the
+scenario is fully tested it will return &#8220;untested&#8221; otherwise it will
+return one of:</p>
+<dl class="docutils">
+<dt>&#8220;untested&#8221;</dt>
+<dd>The scenario was has not been completely tested yet.</dd>
+<dt>&#8220;skipped&#8221;</dt>
+<dd>One or more steps of this scenario was passed over during testing.</dd>
+<dt>&#8220;passed&#8221;</dt>
+<dd>The scenario was tested successfully.</dd>
+<dt>&#8220;failed&#8221;</dt>
+<dd>One or more steps of this scenario failed.</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Scenario.duration">
+<tt class="descname">duration</tt><a class="headerlink" href="#Scenario.duration" title="Permalink to this definition">¶</a></dt>
+<dd><p>The time, in seconds, that it took to test this scenario. If read before
+the scenario is tested it will return 0.0.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Scenario.filename">
+<tt class="descname">filename</tt><a class="headerlink" href="#Scenario.filename" title="Permalink to this definition">¶</a></dt>
+<dd><p>The file name (or &#8220;&lt;string&gt;&#8221;) of the <em>feature file</em> where the scenario
+was found.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Scenario.line">
+<tt class="descname">line</tt><a class="headerlink" href="#Scenario.line" title="Permalink to this definition">¶</a></dt>
+<dd><p>The line number of the <em>feature file</em> where the scenario was found.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="behave.model.ScenarioOutline">
+<em class="property">class </em><tt class="descclassname">behave.model.</tt><tt class="descname">ScenarioOutline</tt><big>(</big><em>filename</em>, <em>line</em>, <em>keyword</em>, <em>name</em>, <em>tags=None</em>, <em>steps=None</em>, <em>examples=None</em>, <em>description=None</em><big>)</big><a class="headerlink" href="#behave.model.ScenarioOutline" title="Permalink to this definition">¶</a></dt>
+<dd><p>A <a class="reference external" href="gherkin.html#scenario-outlines">scenario outline</a> parsed from a <em>feature file</em>.</p>
+<p>A scenario outline extends the existing <a class="reference internal" href="#behave.model.Scenario" title="behave.model.Scenario"><tt class="xref py py-class docutils literal"><span class="pre">Scenario</span></tt></a>
+class with the addition of the <a class="reference internal" href="#behave.model.Examples" title="behave.model.Examples"><tt class="xref py py-class docutils literal"><span class="pre">Examples</span></tt></a> tables of
+data from the <em>feature file</em>.</p>
+<p>The attributes are:</p>
+<dl class="attribute">
+<dt id="ScenarioOutline.keyword">
+<tt class="descname">keyword</tt><a class="headerlink" href="#ScenarioOutline.keyword" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is the keyword as seen in the <em>feature file</em>. In English this will
+typically be &#8220;Scenario Outline&#8221;.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ScenarioOutline.name">
+<tt class="descname">name</tt><a class="headerlink" href="#ScenarioOutline.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>The name of the scenario (the text after &#8220;Scenario Outline:&#8221;.)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ScenarioOutline.description">
+<tt class="descname">description</tt><a class="headerlink" href="#ScenarioOutline.description" title="Permalink to this definition">¶</a></dt>
+<dd><p>The description of the <a class="reference external" href="gherkin.html#scenario-outlines">scenario outline</a> as seen in the <em>feature file</em>.
+This is stored as a list of text lines.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ScenarioOutline.feature">
+<tt class="descname">feature</tt><a class="headerlink" href="#ScenarioOutline.feature" title="Permalink to this definition">¶</a></dt>
+<dd><p>The <a class="reference internal" href="#behave.model.Feature" title="behave.model.Feature"><tt class="xref py py-class docutils literal"><span class="pre">Feature</span></tt></a> this scenario outline belongs to.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ScenarioOutline.steps">
+<tt class="descname">steps</tt><a class="headerlink" href="#ScenarioOutline.steps" title="Permalink to this definition">¶</a></dt>
+<dd><p>A list of <a class="reference internal" href="#behave.model.Step" title="behave.model.Step"><tt class="xref py py-class docutils literal"><span class="pre">Step</span></tt></a> making up this scenario outline.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ScenarioOutline.examples">
+<tt class="descname">examples</tt><a class="headerlink" href="#ScenarioOutline.examples" title="Permalink to this definition">¶</a></dt>
+<dd><p>A list of <a class="reference internal" href="#behave.model.Examples" title="behave.model.Examples"><tt class="xref py py-class docutils literal"><span class="pre">Examples</span></tt></a> used by this scenario outline.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ScenarioOutline.tags">
+<tt class="descname">tags</tt><a class="headerlink" href="#ScenarioOutline.tags" title="Permalink to this definition">¶</a></dt>
+<dd><p>A list of &#64;tags (as <a class="reference internal" href="#behave.model.Tag" title="behave.model.Tag"><tt class="xref py py-class docutils literal"><span class="pre">Tag</span></tt></a> which are basically
+glorified strings) attached to the scenario.
+See <a class="reference internal" href="tutorial.html#controlling-things-with-tags"><em>Controlling Things With Tags</em></a>.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ScenarioOutline.status">
+<tt class="descname">status</tt><a class="headerlink" href="#ScenarioOutline.status" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read-Only. A summary status of the scenario outlines&#8217;s run. If read
+before the scenario is fully tested it will return &#8220;untested&#8221; otherwise
+it will return one of:</p>
+<dl class="docutils">
+<dt>&#8220;untested&#8221;</dt>
+<dd>The scenario was has not been completely tested yet.</dd>
+<dt>&#8220;skipped&#8221;</dt>
+<dd>One or more scenarios of this outline was passed over during testing.</dd>
+<dt>&#8220;passed&#8221;</dt>
+<dd>The scenario was tested successfully.</dd>
+<dt>&#8220;failed&#8221;</dt>
+<dd>One or more scenarios of this outline failed.</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ScenarioOutline.duration">
+<tt class="descname">duration</tt><a class="headerlink" href="#ScenarioOutline.duration" title="Permalink to this definition">¶</a></dt>
+<dd><p>The time, in seconds, that it took to test the scenarios of this
+outline. If read before the scenarios are tested it will return 0.0.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ScenarioOutline.filename">
+<tt class="descname">filename</tt><a class="headerlink" href="#ScenarioOutline.filename" title="Permalink to this definition">¶</a></dt>
+<dd><p>The file name (or &#8220;&lt;string&gt;&#8221;) of the <em>feature file</em> where the scenario
+was found.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ScenarioOutline.line">
+<tt class="descname">line</tt><a class="headerlink" href="#ScenarioOutline.line" title="Permalink to this definition">¶</a></dt>
+<dd><p>The line number of the <em>feature file</em> where the scenario was found.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="behave.model.Examples">
+<em class="property">class </em><tt class="descclassname">behave.model.</tt><tt class="descname">Examples</tt><big>(</big><em>filename</em>, <em>line</em>, <em>keyword</em>, <em>name</em>, <em>table=None</em><big>)</big><a class="headerlink" href="#behave.model.Examples" title="Permalink to this definition">¶</a></dt>
+<dd><p>A table parsed from a <a class="reference external" href="gherkin.html#scenario-outlines">scenario outline</a> in a <em>feature file</em>.</p>
+<p>The attributes are:</p>
+<dl class="attribute">
+<dt id="Examples.keyword">
+<tt class="descname">keyword</tt><a class="headerlink" href="#Examples.keyword" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is the keyword as seen in the <em>feature file</em>. In English this will
+typically be &#8220;Example&#8221;.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Examples.name">
+<tt class="descname">name</tt><a class="headerlink" href="#Examples.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>The name of the example (the text after &#8220;Example:&#8221;.)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Examples.table">
+<tt class="descname">table</tt><a class="headerlink" href="#Examples.table" title="Permalink to this definition">¶</a></dt>
+<dd><p>An instance  of <a class="reference internal" href="#behave.model.Table" title="behave.model.Table"><tt class="xref py py-class docutils literal"><span class="pre">Table</span></tt></a> that came with the example
+in the <em>feature file</em>.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Examples.filename">
+<tt class="descname">filename</tt><a class="headerlink" href="#Examples.filename" title="Permalink to this definition">¶</a></dt>
+<dd><p>The file name (or &#8220;&lt;string&gt;&#8221;) of the <em>feature file</em> where the example
+was found.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Examples.line">
+<tt class="descname">line</tt><a class="headerlink" href="#Examples.line" title="Permalink to this definition">¶</a></dt>
+<dd><p>The line number of the <em>feature file</em> where the example was found.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="behave.model.Tag">
+<em class="property">class </em><tt class="descclassname">behave.model.</tt><tt class="descname">Tag</tt><a class="headerlink" href="#behave.model.Tag" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tags appear may be associated with Features or Scenarios.</p>
+<p>They&#8217;re a subclass of regular strings (unicode pre-Python 3) with an
+additional <tt class="docutils literal"><span class="pre">line</span></tt> number attribute (where the tag was seen in the source
+feature file.</p>
+<p>See <a class="reference internal" href="tutorial.html#controlling-things-with-tags"><em>Controlling Things With Tags</em></a>.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="behave.model.Step">
+<em class="property">class </em><tt class="descclassname">behave.model.</tt><tt class="descname">Step</tt><big>(</big><em>filename</em>, <em>line</em>, <em>keyword</em>, <em>step_type</em>, <em>name</em>, <em>text=None</em>, <em>table=None</em><big>)</big><a class="headerlink" href="#behave.model.Step" title="Permalink to this definition">¶</a></dt>
+<dd><p>A single <a class="reference external" href="gherkin.html#steps">step</a> parsed from a <em>feature file</em>.</p>
+<p>The attributes are:</p>
+<dl class="attribute">
+<dt id="Step.keyword">
+<tt class="descname">keyword</tt><a class="headerlink" href="#Step.keyword" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is the keyword as seen in the <em>feature file</em>. In English this will
+typically be &#8220;Given&#8221;, &#8220;When&#8221;, &#8220;Then&#8221; or a number of other words.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Step.name">
+<tt class="descname">name</tt><a class="headerlink" href="#Step.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>The name of the step (the text after &#8220;Given&#8221; etc.)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Step.step_type">
+<tt class="descname">step_type</tt><a class="headerlink" href="#Step.step_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>The type of step as determined by the keyword. If the keyword is &#8220;and&#8221;
+then the previous keyword in the <em>feature file</em> will determine this
+step&#8217;s step_type.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Step.text">
+<tt class="descname">text</tt><a class="headerlink" href="#Step.text" title="Permalink to this definition">¶</a></dt>
+<dd><p>An instance of <a class="reference internal" href="#behave.model.Text" title="behave.model.Text"><tt class="xref py py-class docutils literal"><span class="pre">Text</span></tt></a> that came with the step
+in the <em>feature file</em>.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Step.table">
+<tt class="descname">table</tt><a class="headerlink" href="#Step.table" title="Permalink to this definition">¶</a></dt>
+<dd><p>An instance of <a class="reference internal" href="#behave.model.Table" title="behave.model.Table"><tt class="xref py py-class docutils literal"><span class="pre">Table</span></tt></a> that came with the step
+in the <em>feature file</em>.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Step.status">
+<tt class="descname">status</tt><a class="headerlink" href="#Step.status" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read-Only. A summary status of the step&#8217;s run. If read before the
+step is tested it will return &#8220;untested&#8221; otherwise it will
+return one of:</p>
+<dl class="docutils">
+<dt>&#8220;skipped&#8221;</dt>
+<dd>This step was passed over during testing.</dd>
+<dt>&#8220;passed&#8221;</dt>
+<dd>The step was tested successfully.</dd>
+<dt>&#8220;failed&#8221;</dt>
+<dd>The step failed.</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Step.duration">
+<tt class="descname">duration</tt><a class="headerlink" href="#Step.duration" title="Permalink to this definition">¶</a></dt>
+<dd><p>The time, in seconds, that it took to test this step. If read before the
+step is tested it will return 0.0.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Step.error_message">
+<tt class="descname">error_message</tt><a class="headerlink" href="#Step.error_message" title="Permalink to this definition">¶</a></dt>
+<dd><p>If the step failed then this will hold any error information, as a
+single string. It will otherwise be None.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Step.filename">
+<tt class="descname">filename</tt><a class="headerlink" href="#Step.filename" title="Permalink to this definition">¶</a></dt>
+<dd><p>The file name (or &#8220;&lt;string&gt;&#8221;) of the <em>feature file</em> where the step was
+found.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Step.line">
+<tt class="descname">line</tt><a class="headerlink" href="#Step.line" title="Permalink to this definition">¶</a></dt>
+<dd><p>The line number of the <em>feature file</em> where the step was found.</p>
+</dd></dl>
+
+</dd></dl>
+
+<p>Tables may be associated with either Examples or Steps:</p>
+<dl class="class">
+<dt id="behave.model.Table">
+<em class="property">class </em><tt class="descclassname">behave.model.</tt><tt class="descname">Table</tt><big>(</big><em>headings</em>, <em>line=None</em>, <em>rows=None</em><big>)</big><a class="headerlink" href="#behave.model.Table" title="Permalink to this definition">¶</a></dt>
+<dd><p>A <a class="reference external" href="gherkin.html#table">table</a> extracted from a <em>feature file</em>.</p>
+<p>Table instance data is accessible using a number of methods:</p>
+<dl class="docutils">
+<dt><strong>iteration</strong></dt>
+<dd>Iterating over the Table will yield the <a class="reference internal" href="#behave.model.Row" title="behave.model.Row"><tt class="xref py py-class docutils literal"><span class="pre">Row</span></tt></a>
+instances from the .rows attribute.</dd>
+<dt><strong>indexed access</strong></dt>
+<dd>Individual rows may be accessed directly by index on the Table instance;
+table[0] gives the first non-heading row and table[-1] gives the last
+row.</dd>
+</dl>
+<p>The attributes are:</p>
+<dl class="attribute">
+<dt id="Table.headings">
+<tt class="descname">headings</tt><a class="headerlink" href="#Table.headings" title="Permalink to this definition">¶</a></dt>
+<dd><p>The headings of the table as a list of strings.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Table.rows">
+<tt class="descname">rows</tt><a class="headerlink" href="#Table.rows" title="Permalink to this definition">¶</a></dt>
+<dd><p>An list of instances of <a class="reference internal" href="#behave.model.Row" title="behave.model.Row"><tt class="xref py py-class docutils literal"><span class="pre">Row</span></tt></a> that make up the body
+of the table in the <em>feature file</em>.</p>
+</dd></dl>
+
+<p>Tables are also comparable, for what that&#8217;s worth. Headings and row data
+are compared.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="behave.model.Row">
+<em class="property">class </em><tt class="descclassname">behave.model.</tt><tt class="descname">Row</tt><big>(</big><em>headings</em>, <em>cells</em>, <em>line=None</em>, <em>comments=None</em><big>)</big><a class="headerlink" href="#behave.model.Row" title="Permalink to this definition">¶</a></dt>
+<dd><p>One row of a <a class="reference external" href="gherkin.html#table">table</a> parsed from a <em>feature file</em>.</p>
+<p>Row data is accessible using a number of methods:</p>
+<dl class="docutils">
+<dt><strong>iteration</strong></dt>
+<dd>Iterating over the Row will yield the individual cells as strings.</dd>
+<dt><strong>named access</strong></dt>
+<dd>Individual cells may be accessed by heading name; row[&#8216;name&#8217;] would give
+the cell value for the column with heading &#8220;name&#8221;.</dd>
+<dt><strong>indexed access</strong></dt>
+<dd>Individual cells may be accessed directly by index on the Row instance;
+row[0] gives the first cell and row[-1] gives the last cell.</dd>
+</dl>
+<p>The attributes are:</p>
+<dl class="attribute">
+<dt id="Row.cells">
+<tt class="descname">cells</tt><a class="headerlink" href="#Row.cells" title="Permalink to this definition">¶</a></dt>
+<dd><p>The list of strings that form the cells of this row.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Row.headings">
+<tt class="descname">headings</tt><a class="headerlink" href="#Row.headings" title="Permalink to this definition">¶</a></dt>
+<dd><p>The headings of the table as a list of strings.</p>
+</dd></dl>
+
+<p>Rows are also comparable, for what that&#8217;s worth. Only the cells are
+compared.</p>
+</dd></dl>
+
+<p>And Text may be associated with Steps:</p>
+<dl class="class">
+<dt id="behave.model.Text">
+<em class="property">class </em><tt class="descclassname">behave.model.</tt><tt class="descname">Text</tt><a class="headerlink" href="#behave.model.Text" title="Permalink to this definition">¶</a></dt>
+<dd><p>Store multiline text from a Step definition.</p>
+<p>The attributes are:</p>
+<dl class="attribute">
+<dt id="Text.value">
+<tt class="descname">value</tt><a class="headerlink" href="#Text.value" title="Permalink to this definition">¶</a></dt>
+<dd><p>The actual text parsed from the <em>feature file</em>.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Text.content_type">
+<tt class="descname">content_type</tt><a class="headerlink" href="#Text.content_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Currently only &#8216;text/plain&#8217;.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="logging-capture">
+<h2>Logging Capture<a class="headerlink" href="#logging-capture" title="Permalink to this headline">¶</a></h2>
+<p>The logging capture <em>behave</em> uses by default is implemented by the class
+<a class="reference internal" href="#behave.log_capture.LoggingCapture" title="behave.log_capture.LoggingCapture"><tt class="xref py py-class docutils literal"><span class="pre">LoggingCapture</span></tt></a>. It has methods</p>
+<dl class="class">
+<dt id="behave.log_capture.LoggingCapture">
+<em class="property">class </em><tt class="descclassname">behave.log_capture.</tt><tt class="descname">LoggingCapture</tt><big>(</big><em>config</em>, <em>level=None</em><big>)</big><a class="headerlink" href="#behave.log_capture.LoggingCapture" title="Permalink to this definition">¶</a></dt>
+<dd><p>Capture logging events in a memory buffer for later display or query.</p>
+<p>Captured logging events are stored on the attribute
+<a class="reference internal" href="#LoggingCapture.buffer" title="LoggingCapture.buffer"><tt class="xref py py-attr docutils literal"><span class="pre">buffer</span></tt></a>:</p>
+<dl class="attribute">
+<dt id="LoggingCapture.buffer">
+<tt class="descname">buffer</tt><a class="headerlink" href="#LoggingCapture.buffer" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is a list of captured logging events as <a class="reference external" href="http://docs.python.org/library/logging.html#logrecord-objects">logging.LogRecords</a>.</p>
+</dd></dl>
+
+<p>By default the format of the messages will be:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="s">&#39;</span><span class="si">%(levelname)s</span><span class="s">:</span><span class="si">%(name)s</span><span class="s">:</span><span class="si">%(message)s</span><span class="s">&#39;</span>
+</pre></div>
+</div>
+<p>This may be overridden using standard logging formatter names in the
+configuration variable <tt class="docutils literal"><span class="pre">logging_format</span></tt>.</p>
+<p>The level of logging captured is set to <tt class="docutils literal"><span class="pre">logging.NOTSET</span></tt> by default. You
+may override this using the configuration setting <tt class="docutils literal"><span class="pre">logging_level</span></tt> (which
+is set to a level name.)</p>
+<p>Finally there may be <a class="reference external" href="behave.html#command-line-arguments">filtering of logging events</a> specified by the
+configuration variable <tt class="docutils literal"><span class="pre">logging_filter</span></tt>.</p>
+<dl class="method">
+<dt id="behave.log_capture.LoggingCapture.abandon">
+<tt class="descname">abandon</tt><big>(</big><big>)</big><a class="headerlink" href="#behave.log_capture.LoggingCapture.abandon" title="Permalink to this definition">¶</a></dt>
+<dd><p>Turn off logging capture.</p>
+<p>If other handlers were removed by <tt class="xref py py-meth docutils literal"><span class="pre">inveigle()</span></tt> then
+they are reinstated.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="behave.log_capture.LoggingCapture.any_errors">
+<tt class="descname">any_errors</tt><big>(</big><big>)</big><a class="headerlink" href="#behave.log_capture.LoggingCapture.any_errors" title="Permalink to this definition">¶</a></dt>
+<dd><p>Search through the buffer for any ERROR or CRITICAL events.</p>
+<p>Returns boolean indicating whether a match was found.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="behave.log_capture.LoggingCapture.findEvent">
+<tt class="descname">findEvent</tt><big>(</big><em>pattern</em><big>)</big><a class="headerlink" href="#behave.log_capture.LoggingCapture.findEvent" title="Permalink to this definition">¶</a></dt>
+<dd><p>Search through the buffer for a message that matches the given
+regular expression.</p>
+<p>Returns boolean indicating whether a match was found.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="behave.log_capture.LoggingCapture.inveigle">
+<tt class="descname">inveigle</tt><big>(</big><big>)</big><a class="headerlink" href="#behave.log_capture.LoggingCapture.inveigle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Turn on logging capture by replacing all existing handlers
+configured in the logging module.</p>
+<p>If the config var logging_clear_handlers is set then we also remove
+all existing handlers.</p>
+<p>We also set the level of the root logger.</p>
+<p>The opposite of this is <tt class="xref py py-meth docutils literal"><span class="pre">abandon()</span></tt>.</p>
+</dd></dl>
+
+</dd></dl>
+
+<p>The <em>log_capture</em> module also defines a handy logging capture decorator that&#8217;s
+intended to be used on your <a class="reference internal" href="#environment-file-functions">environment file functions</a>.</p>
+<dl class="function">
+<dt id="behave.log_capture.capture">
+<tt class="descclassname">behave.log_capture.</tt><tt class="descname">capture</tt><big>(</big><em>*args</em>, <em>**kw</em><big>)</big><a class="headerlink" href="#behave.log_capture.capture" title="Permalink to this definition">¶</a></dt>
+<dd><p>Decorator to wrap an <em>environment file function</em> in log file capture.</p>
+<p>It configures the logging capture using the <em>behave</em> context - the first
+argument to the function being decorated (so don&#8217;t use this to decorate
+something that doesn&#8217;t have <em>context</em> as the first argument.)</p>
+<p>The basic usage is:</p>
+<p>The function prints any captured logging (at the level determined by the
+<tt class="docutils literal"><span class="pre">log_level</span></tt> configuration setting) directly to stdout, regardless of
+error conditions.</p>
+<p>It is mostly useful for debugging in situations where you are seeing a
+message like:</p>
+<div class="highlight-python"><div class="highlight"><pre>No handlers could be found for logger &quot;name&quot;
+</pre></div>
+</div>
+<p>The decorator takes an optional &#8220;level&#8221; keyword argument which limits the
+level of logging captured, overriding the level in the run&#8217;s configuration:</p>
+<p>This would limit the logging captured to just ERROR and above, and thus
+only display logged events if they are interesting.</p>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="_static/behave_logo1.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Behave API Reference</a><ul>
+<li><a class="reference internal" href="#step-functions">Step Functions</a><ul>
+<li><a class="reference internal" href="#step-parameters">Step Parameters</a></li>
+<li><a class="reference internal" href="#calling-steps-from-other-steps">Calling Steps From Other Steps</a></li>
+<li><a class="reference internal" href="#from-behave-import">from behave import *</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#environment-file-functions">Environment File Functions</a><ul>
+<li><a class="reference internal" href="#some-useful-environment-ideas">Some Useful Environment Ideas</a><ul>
+<li><a class="reference internal" href="#logging-setup">Logging Setup</a></li>
+<li><a class="reference internal" href="#capture-logging-in-hooks">Capture Logging in Hooks</a></li>
+<li><a class="reference internal" href="#detecting-that-user-code-overwrites-behave-context-attributes">Detecting that user code overwrites behave Context attributes</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#runner-operation">Runner Operation</a></li>
+<li><a class="reference internal" href="#model-objects">Model Objects</a></li>
+<li><a class="reference internal" href="#logging-capture">Logging Capture</a></li>
+</ul>
+</li>
+</ul>
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="behave.html" title="previous chapter">Using <em>behave</em></a></li>
+      <li>Next: <a href="django.html" title="next chapter">Django Test Integration</a></li>
+  </ul></li>
+</ul>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/api.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy; Copyright 2012-2015, Benno Rice, Richard Jones and Jens Engel.
+    </div>
+    <a href="https://github.com/behave/behave" class="github">
+      <img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/38ef81f8aca64bb9a64448d0d70f1308ef5341ab/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6461726b626c75655f3132313632312e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png">
+    </a>
+  </body>
+</html>

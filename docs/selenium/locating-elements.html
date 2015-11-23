@@ -1,0 +1,398 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>4. Locating Elements &mdash; Selenium Python Bindings 2 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '2',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Selenium Python Bindings 2 documentation" href="index.html" />
+    <link rel="next" title="5. Waits" href="waits.html" />
+    <link rel="prev" title="3. Navigating" href="navigating.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="waits.html" title="5. Waits"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="navigating.html" title="3. Navigating"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">Selenium Python Bindings 2 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="locating-elements">
+<span id="id1"></span><h1>4. Locating Elements<a class="headerlink" href="#locating-elements" title="Permalink to this headline">¶</a></h1>
+<p>There are vaious strategies to locate elements in a page.  You can use
+the most appropriate one for your case.  Selenium provides the following
+methods to locate elements in a page:</p>
+<ul class="simple">
+<li><cite>find_element_by_id</cite></li>
+<li><cite>find_element_by_name</cite></li>
+<li><cite>find_element_by_xpath</cite></li>
+<li><cite>find_element_by_link_text</cite></li>
+<li><cite>find_element_by_partial_link_text</cite></li>
+<li><cite>find_element_by_tag_name</cite></li>
+<li><cite>find_element_by_class_name</cite></li>
+<li><cite>find_element_by_css_selector</cite></li>
+</ul>
+<p><strong>To find multiple elements (these methods will return a list):</strong></p>
+<ul class="simple">
+<li><cite>find_elements_by_name</cite></li>
+<li><cite>find_elements_by_xpath</cite></li>
+<li><cite>find_elements_by_link_text</cite></li>
+<li><cite>find_elements_by_partial_link_text</cite></li>
+<li><cite>find_elements_by_tag_name</cite></li>
+<li><cite>find_elements_by_class_name</cite></li>
+<li><cite>find_elements_by_css_selector</cite></li>
+</ul>
+<p>Apart from the public methods given above, there are two private
+methods which might be useful with locators in page objects.  These
+are the two private methods: <cite>find_element</cite> and <cite>find_elements</cite>.</p>
+<p>Example usage:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">selenium.webdriver.common.by</span> <span class="kn">import</span> <span class="n">By</span>
+
+<span class="n">driver</span><span class="o">.</span><span class="n">find_element</span><span class="p">(</span><span class="n">By</span><span class="o">.</span><span class="n">XPATH</span><span class="p">,</span> <span class="s">&#39;//button[text()=&quot;Some text&quot;]&#39;</span><span class="p">)</span>
+<span class="n">driver</span><span class="o">.</span><span class="n">find_elements</span><span class="p">(</span><span class="n">By</span><span class="o">.</span><span class="n">XPATH</span><span class="p">,</span> <span class="s">&#39;//button&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>These are the attributes available for <cite>By</cite> class:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">ID</span> <span class="o">=</span> <span class="s">&quot;id&quot;</span>
+<span class="n">XPATH</span> <span class="o">=</span> <span class="s">&quot;xpath&quot;</span>
+<span class="n">LINK_TEXT</span> <span class="o">=</span> <span class="s">&quot;link text&quot;</span>
+<span class="n">PARTIAL_LINK_TEXT</span> <span class="o">=</span> <span class="s">&quot;partial link text&quot;</span>
+<span class="n">NAME</span> <span class="o">=</span> <span class="s">&quot;name&quot;</span>
+<span class="n">TAG_NAME</span> <span class="o">=</span> <span class="s">&quot;tag name&quot;</span>
+<span class="n">CLASS_NAME</span> <span class="o">=</span> <span class="s">&quot;class name&quot;</span>
+<span class="n">CSS_SELECTOR</span> <span class="o">=</span> <span class="s">&quot;css selector&quot;</span>
+</pre></div>
+</div>
+<div class="section" id="locating-by-id">
+<h2>4.1. Locating by Id<a class="headerlink" href="#locating-by-id" title="Permalink to this headline">¶</a></h2>
+<p>Use this when you know <cite>id</cite> attribute of an element.  With this
+strategy, the first element with the <cite>id</cite> attribute value matching the
+location will be returned.  If no element has a matching <cite>id</cite>
+attribute, a <tt class="docutils literal"><span class="pre">NoSuchElementException</span></tt> will be raised.</p>
+<p>For instance, consider this page source:</p>
+<div class="highlight-python"><div class="highlight"><pre>&lt;html&gt;
+ &lt;body&gt;
+  &lt;form id=&quot;loginForm&quot;&gt;
+   &lt;input name=&quot;username&quot; type=&quot;text&quot; /&gt;
+   &lt;input name=&quot;password&quot; type=&quot;password&quot; /&gt;
+   &lt;input name=&quot;continue&quot; type=&quot;submit&quot; value=&quot;Login&quot; /&gt;
+  &lt;/form&gt;
+ &lt;/body&gt;
+&lt;html&gt;
+</pre></div>
+</div>
+<p>The form element can be located like this:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">login_form</span> <span class="o">=</span> <span class="n">driver</span><span class="o">.</span><span class="n">find_element_by_id</span><span class="p">(</span><span class="s">&#39;loginForm&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="locating-by-name">
+<h2>4.2. Locating by Name<a class="headerlink" href="#locating-by-name" title="Permalink to this headline">¶</a></h2>
+<p>Use this when you know <cite>name</cite> attribute of an element.  With this
+strategy, the first element with the <cite>name</cite> attribute value matching
+the location will be returned.  If no element has a matching <cite>name</cite>
+attribute, a <tt class="docutils literal"><span class="pre">NoSuchElementException</span></tt> will be raised.</p>
+<p>For instance, consider this page source:</p>
+<div class="highlight-python"><div class="highlight"><pre>&lt;html&gt;
+ &lt;body&gt;
+  &lt;form id=&quot;loginForm&quot;&gt;
+   &lt;input name=&quot;username&quot; type=&quot;text&quot; /&gt;
+   &lt;input name=&quot;password&quot; type=&quot;password&quot; /&gt;
+   &lt;input name=&quot;continue&quot; type=&quot;submit&quot; value=&quot;Login&quot; /&gt;
+   &lt;input name=&quot;continue&quot; type=&quot;button&quot; value=&quot;Clear&quot; /&gt;
+  &lt;/form&gt;
+&lt;/body&gt;
+&lt;html&gt;
+</pre></div>
+</div>
+<p>The username &amp; password elements can be located like this:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">username</span> <span class="o">=</span> <span class="n">driver</span><span class="o">.</span><span class="n">find_element_by_name</span><span class="p">(</span><span class="s">&#39;username&#39;</span><span class="p">)</span>
+<span class="n">password</span> <span class="o">=</span> <span class="n">driver</span><span class="o">.</span><span class="n">find_element_by_name</span><span class="p">(</span><span class="s">&#39;password&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This will give the &#8220;Login&#8221; button as it occur before the &#8220;Clear&#8221;
+button:</p>
+<div class="highlight-python"><div class="highlight"><pre>continue = driver.find_element_by_name(&#39;continue&#39;)
+</pre></div>
+</div>
+</div>
+<div class="section" id="locating-by-xpath">
+<h2>4.3. Locating by XPath<a class="headerlink" href="#locating-by-xpath" title="Permalink to this headline">¶</a></h2>
+<p>XPath is the language used for locating nodes in an XML document.  As
+HTML can be an implementation of XML (XHTML), Selenium users can
+leverage this powerful language to target elements in their web
+applications.  XPath extends beyond (as well as supporting) the simple
+methods of locating by id or name attributes, and opens up all sorts
+of new possibilities such as locating the third checkbox on the page.</p>
+<p>One of the main reasons for using XPath is when you don&#8217;t have a
+suitable id or name attribute for the element you wish to locate.  You
+can use XPath to either locate the element in absolute terms (not
+advised), or relative to an element that does have an id or name
+attribute.  XPath locators can also be used to specify elements via
+attributes other than id and name.</p>
+<p>Absolute XPaths contain the location of all elements from the root
+(html) and as a result are likely to fail with only the slightest
+adjustment to the application.  By finding a nearby element with an id
+or name attribute (ideally a parent element) you can locate your
+target element based on the relationship.  This is much less likely to
+change and can make your tests more robust.</p>
+<p>For instance, consider this page source:</p>
+<div class="highlight-python"><div class="highlight"><pre>&lt;html&gt;
+ &lt;body&gt;
+  &lt;form id=&quot;loginForm&quot;&gt;
+   &lt;input name=&quot;username&quot; type=&quot;text&quot; /&gt;
+   &lt;input name=&quot;password&quot; type=&quot;password&quot; /&gt;
+   &lt;input name=&quot;continue&quot; type=&quot;submit&quot; value=&quot;Login&quot; /&gt;
+   &lt;input name=&quot;continue&quot; type=&quot;button&quot; value=&quot;Clear&quot; /&gt;
+  &lt;/form&gt;
+&lt;/body&gt;
+&lt;html&gt;
+</pre></div>
+</div>
+<p>The form elements can be located like this:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">login_form</span> <span class="o">=</span> <span class="n">driver</span><span class="o">.</span><span class="n">find_element_by_xpath</span><span class="p">(</span><span class="s">&quot;/html/body/form[1]&quot;</span><span class="p">)</span>
+<span class="n">login_form</span> <span class="o">=</span> <span class="n">driver</span><span class="o">.</span><span class="n">find_element_by_xpath</span><span class="p">(</span><span class="s">&quot;//form[1]&quot;</span><span class="p">)</span>
+<span class="n">login_form</span> <span class="o">=</span> <span class="n">driver</span><span class="o">.</span><span class="n">find_element_by_xpath</span><span class="p">(</span><span class="s">&quot;//form[@id=&#39;loginForm&#39;]&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<ol class="arabic simple">
+<li>Absolute path (would break if the HTML was changed only slightly)</li>
+<li>First form element in the HTML</li>
+<li>The form element with attribute named <cite>id</cite> and the value <cite>loginForm</cite></li>
+</ol>
+<p>The username element can be located like this:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">username</span> <span class="o">=</span> <span class="n">driver</span><span class="o">.</span><span class="n">find_element_by_xpath</span><span class="p">(</span><span class="s">&quot;//form[input/@name=&#39;username&#39;]&quot;</span><span class="p">)</span>
+<span class="n">username</span> <span class="o">=</span> <span class="n">driver</span><span class="o">.</span><span class="n">find_element_by_xpath</span><span class="p">(</span><span class="s">&quot;//form[@id=&#39;loginForm&#39;]/input[1]&quot;</span><span class="p">)</span>
+<span class="n">username</span> <span class="o">=</span> <span class="n">driver</span><span class="o">.</span><span class="n">find_element_by_xpath</span><span class="p">(</span><span class="s">&quot;//input[@name=&#39;username&#39;]&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<ol class="arabic simple">
+<li>First form element with an input child element with attribute named
+<cite>name</cite> and the value <cite>username</cite></li>
+<li>First input child element of the form element with attribute named
+<cite>id</cite> and the value <cite>loginForm</cite></li>
+<li>First input element with attribute named &#8216;name&#8217; and the value
+<cite>username</cite></li>
+</ol>
+<p>The &#8220;Clear&#8221; button element can be located like this:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">clear_button</span> <span class="o">=</span> <span class="n">driver</span><span class="o">.</span><span class="n">find_element_by_xpath</span><span class="p">(</span><span class="s">&quot;//input[@name=&#39;continue&#39;][@type=&#39;button&#39;]&quot;</span><span class="p">)</span>
+<span class="n">clear_button</span> <span class="o">=</span> <span class="n">driver</span><span class="o">.</span><span class="n">find_element_by_xpath</span><span class="p">(</span><span class="s">&quot;//form[@id=&#39;loginForm&#39;]/input[4]&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<ol class="arabic simple">
+<li>Input with attribute named <cite>name</cite> and the value <cite>continue</cite> and
+attribute named <cite>type</cite> and the value <cite>button</cite></li>
+<li>Fourth input child element of the form element with attribute named
+<cite>id</cite> and value <cite>loginForm</cite></li>
+</ol>
+<p>These examples cover some basics, but in order to learn more, the
+following references are recommended:</p>
+<ul class="simple">
+<li><a class="reference external" href="http://www.w3schools.com/Xpath/">W3Schools XPath Tutorial</a></li>
+<li><a class="reference external" href="http://www.w3.org/TR/xpath">W3C XPath Recommendation</a></li>
+<li><a class="reference external" href="http://www.zvon.org/comp/r/tut-XPath_1.html">XPath Tutorial</a>
+- with interactive examples.</li>
+</ul>
+<p>There are also a couple of very useful Add-ons that can assist in
+discovering the XPath of an element:</p>
+<ul class="simple">
+<li><a class="reference external" href="https://addons.mozilla.org/en-US/firefox/addon/1095?id=1095">XPath Checker</a> -
+suggests XPath and can be used to test XPath results.</li>
+<li><a class="reference external" href="https://addons.mozilla.org/en-US/firefox/addon/1843">Firebug</a> -
+XPath suggestions are just one of the many powerful features of this
+very useful add-on.</li>
+<li><a class="reference external" href="https://chrome.google.com/webstore/detail/hgimnogjllphhhkhlmebbmlgjoejdpjl">XPath Helper</a> -
+for Google Chrome</li>
+</ul>
+</div>
+<div class="section" id="locating-hyperlinks-by-link-text">
+<h2>4.4. Locating Hyperlinks by Link Text<a class="headerlink" href="#locating-hyperlinks-by-link-text" title="Permalink to this headline">¶</a></h2>
+<p>Use this when you know link text used within an anchor tag.  With this
+strategy, the first element with the link text value matching the
+location will be returned.  If no element has a matching link text
+attribute, a <tt class="docutils literal"><span class="pre">NoSuchElementException</span></tt> will be raised.</p>
+<p>For instance, consider this page source:</p>
+<div class="highlight-python"><div class="highlight"><pre>&lt;html&gt;
+ &lt;body&gt;
+  &lt;p&gt;Are you sure you want to do this?&lt;/p&gt;
+  &lt;a href=&quot;continue.html&quot;&gt;Continue&lt;/a&gt;
+  &lt;a href=&quot;cancel.html&quot;&gt;Cancel&lt;/a&gt;
+&lt;/body&gt;
+&lt;html&gt;
+</pre></div>
+</div>
+<p>The continue.html link can be located like this:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">continue_link</span> <span class="o">=</span> <span class="n">driver</span><span class="o">.</span><span class="n">find_element_by_link_text</span><span class="p">(</span><span class="s">&#39;Continue&#39;</span><span class="p">)</span>
+<span class="n">continue_link</span> <span class="o">=</span> <span class="n">driver</span><span class="o">.</span><span class="n">find_element_by_partial_link_text</span><span class="p">(</span><span class="s">&#39;Conti&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="locating-elements-by-tag-name">
+<h2>4.5. Locating Elements by Tag Name<a class="headerlink" href="#locating-elements-by-tag-name" title="Permalink to this headline">¶</a></h2>
+<p>Use this when you want to locate an element by tag name. With this
+strategy, the first element with the given tag name will be returned.
+If no element has a matching tag name, a <tt class="docutils literal"><span class="pre">NoSuchElementException</span></tt>
+will be raised.</p>
+<p>For instance, consider this page source:</p>
+<div class="highlight-python"><div class="highlight"><pre>&lt;html&gt;
+ &lt;body&gt;
+  &lt;h1&gt;Welcome&lt;/h1&gt;
+  &lt;p&gt;Site content goes here.&lt;/p&gt;
+&lt;/body&gt;
+&lt;html&gt;
+</pre></div>
+</div>
+<p>The heading (h1) element can be located like this:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">heading1</span> <span class="o">=</span> <span class="n">driver</span><span class="o">.</span><span class="n">find_element_by_tag_name</span><span class="p">(</span><span class="s">&#39;h1&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="locating-elements-by-class-name">
+<h2>4.6. Locating Elements by Class Name<a class="headerlink" href="#locating-elements-by-class-name" title="Permalink to this headline">¶</a></h2>
+<p>Use this when you want to locate an element by class attribute name.
+With this strategy, the first element with the matching class attribute
+name will be returned.  If no element has a matching class attribute name,
+a <tt class="docutils literal"><span class="pre">NoSuchElementException</span></tt> will be raised.</p>
+<p>For instance, consider this page source:</p>
+<div class="highlight-python"><div class="highlight"><pre>&lt;html&gt;
+ &lt;body&gt;
+  &lt;p class=&quot;content&quot;&gt;Site content goes here.&lt;/p&gt;
+&lt;/body&gt;
+&lt;html&gt;
+</pre></div>
+</div>
+<p>The &#8220;p&#8221; element can be located like this:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">content</span> <span class="o">=</span> <span class="n">driver</span><span class="o">.</span><span class="n">find_element_by_class_name</span><span class="p">(</span><span class="s">&#39;content&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="locating-elements-by-css-selectors">
+<h2>4.7. Locating Elements by CSS Selectors<a class="headerlink" href="#locating-elements-by-css-selectors" title="Permalink to this headline">¶</a></h2>
+<p>Use this when you want to locate an element by CSS selector syntaxt.
+With this strategy, the first element with the matching CSS selector
+will be returned.  If no element has a matching CSS selector,
+a <tt class="docutils literal"><span class="pre">NoSuchElementException</span></tt> will be raised.</p>
+<p>For instance, consider this page source:</p>
+<div class="highlight-python"><div class="highlight"><pre>&lt;html&gt;
+ &lt;body&gt;
+  &lt;p class=&quot;content&quot;&gt;Site content goes here.&lt;/p&gt;
+&lt;/body&gt;
+&lt;html&gt;
+</pre></div>
+</div>
+<p>The &#8220;p&#8221; element can be located like this:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">content</span> <span class="o">=</span> <span class="n">driver</span><span class="o">.</span><span class="n">find_element_by_css_selector</span><span class="p">(</span><span class="s">&#39;p.content&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><a class="reference external" href="http://saucelabs.com/resources/selenium/css-selectors">Sauce Labs has good documentation</a>
+on CSS selectors.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">4. Locating Elements</a><ul>
+<li><a class="reference internal" href="#locating-by-id">4.1. Locating by Id</a></li>
+<li><a class="reference internal" href="#locating-by-name">4.2. Locating by Name</a></li>
+<li><a class="reference internal" href="#locating-by-xpath">4.3. Locating by XPath</a></li>
+<li><a class="reference internal" href="#locating-hyperlinks-by-link-text">4.4. Locating Hyperlinks by Link Text</a></li>
+<li><a class="reference internal" href="#locating-elements-by-tag-name">4.5. Locating Elements by Tag Name</a></li>
+<li><a class="reference internal" href="#locating-elements-by-class-name">4.6. Locating Elements by Class Name</a></li>
+<li><a class="reference internal" href="#locating-elements-by-css-selectors">4.7. Locating Elements by CSS Selectors</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="navigating.html"
+                        title="previous chapter">3. Navigating</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="waits.html"
+                        title="next chapter">5. Waits</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/locating-elements.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="waits.html" title="5. Waits"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="navigating.html" title="3. Navigating"
+             >previous</a> |</li>
+        <li><a href="index.html">Selenium Python Bindings 2 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, Baiju Muthukadan.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>

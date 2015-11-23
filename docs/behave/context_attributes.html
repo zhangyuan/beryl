@@ -1,0 +1,278 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Context Attributes &mdash; behave 1.2.6.dev0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/flasky.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.2.6.dev0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="behave 1.2.6.dev0 documentation" href="index.html" />
+    <link rel="up" title="Appendix" href="appendix.html" />
+    <link rel="next" title="Predefined Data Types in parse" href="parse_builtin_types.html" />
+    <link rel="prev" title="Formatters and Reporters" href="formatters.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="parse_builtin_types.html" title="Predefined Data Types in parse"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="formatters.html" title="Formatters and Reporters"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">behave 1.2.6.dev0 documentation</a> &raquo;</li>
+          <li><a href="appendix.html" accesskey="U">Appendix</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="context-attributes">
+<span id="id-appendix-context-attributes"></span><h1>Context Attributes<a class="headerlink" href="#context-attributes" title="Permalink to this headline">¶</a></h1>
+<p>A context object (<a class="reference internal" href="api.html#behave.runner.Context" title="behave.runner.Context"><tt class="xref py py-class docutils literal"><span class="pre">Context</span></tt></a>) is handed to</p>
+<blockquote>
+<div><ul class="simple">
+<li>step definitions (step implementations)</li>
+<li>behave hooks (<tt class="xref py py-func docutils literal"><span class="pre">before_all()</span></tt>, <tt class="xref py py-func docutils literal"><span class="pre">before_feature()</span></tt>, ..., <tt class="xref py py-func docutils literal"><span class="pre">after_all()</span></tt>)</li>
+</ul>
+</div></blockquote>
+<div class="section" id="behave-attributes">
+<h2>Behave Attributes<a class="headerlink" href="#behave-attributes" title="Permalink to this headline">¶</a></h2>
+<p>The <a class="reference external" href="https://pypi.python.org/pypi/behave">behave</a> runner assigns a number of attributes to the context object
+during a test run.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="11%" />
+<col width="7%" />
+<col width="34%" />
+<col width="47%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Attribute Name</th>
+<th class="head">Layer</th>
+<th class="head">Type</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>config</td>
+<td>test run</td>
+<td><tt class="xref py py-class docutils literal"><span class="pre">Configuration</span></tt></td>
+<td>Configuration that is used.</td>
+</tr>
+<tr class="row-odd"><td>aborted</td>
+<td>test run</td>
+<td>bool</td>
+<td>Set to true if test run is aborted by the user.</td>
+</tr>
+<tr class="row-even"><td>failed</td>
+<td>test run</td>
+<td>bool</td>
+<td>Set to true if a step fails.</td>
+</tr>
+<tr class="row-odd"><td>feature</td>
+<td>feature</td>
+<td><a class="reference internal" href="api.html#behave.model.Feature" title="behave.model.Feature"><tt class="xref py py-class docutils literal"><span class="pre">Feature</span></tt></a></td>
+<td>Current feature.</td>
+</tr>
+<tr class="row-even"><td>tags</td>
+<td>feature,
+scenario</td>
+<td>list&lt;<a class="reference internal" href="api.html#behave.model.Tag" title="behave.model.Tag"><tt class="xref py py-class docutils literal"><span class="pre">Tag</span></tt></a>&gt;</td>
+<td>Effective tags of current feature, scenario, scenario outline.</td>
+</tr>
+<tr class="row-odd"><td>active_outline</td>
+<td>scenario
+outline</td>
+<td><a class="reference internal" href="api.html#behave.model.Row" title="behave.model.Row"><tt class="xref py py-class docutils literal"><span class="pre">Row</span></tt></a></td>
+<td>Current row in a scenario outline (in examples table).</td>
+</tr>
+<tr class="row-even"><td>scenario</td>
+<td>scenario</td>
+<td><a class="reference internal" href="api.html#behave.model.Scenario" title="behave.model.Scenario"><tt class="xref py py-class docutils literal"><span class="pre">Scenario</span></tt></a></td>
+<td>Current scenario.</td>
+</tr>
+<tr class="row-odd"><td>log_capture</td>
+<td>scenario</td>
+<td><a class="reference internal" href="api.html#behave.log_capture.LoggingCapture" title="behave.log_capture.LoggingCapture"><tt class="xref py py-class docutils literal"><span class="pre">LoggingCapture</span></tt></a></td>
+<td>If logging capture is enabled.</td>
+</tr>
+<tr class="row-even"><td>stdout_capture</td>
+<td>scenario</td>
+<td><tt class="xref py py-class docutils literal"><span class="pre">StringIO</span></tt></td>
+<td>If stdout  capture is enabled.</td>
+</tr>
+<tr class="row-odd"><td>stderr_capture</td>
+<td>scenario</td>
+<td><tt class="xref py py-class docutils literal"><span class="pre">StringIO</span></tt></td>
+<td>If stderr  capture is enabled.</td>
+</tr>
+<tr class="row-even"><td>table</td>
+<td>step</td>
+<td><a class="reference internal" href="api.html#behave.model.Table" title="behave.model.Table"><tt class="xref py py-class docutils literal"><span class="pre">Table</span></tt></a></td>
+<td>Contains step&#8217;s table, otherwise None.</td>
+</tr>
+<tr class="row-odd"><td>text</td>
+<td>step</td>
+<td>String</td>
+<td>Contains step&#8217;s multi-line text (unicode), otherwise None.</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last"><a class="reference internal" href="#behave-attributes">Behave attributes</a> in the context object should not be modified by a user.
+See <a class="reference internal" href="api.html#behave.runner.Context" title="behave.runner.Context"><tt class="xref py py-class docutils literal"><span class="pre">Context</span></tt></a> class description for more details.</p>
+</div>
+</div>
+<div class="section" id="user-attributes">
+<h2>User Attributes<a class="headerlink" href="#user-attributes" title="Permalink to this headline">¶</a></h2>
+<p>A user can assign (or modify) own attributes to the context object.
+But these attributes will be removed again from the context object depending
+where these attributes are defined.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="12%" />
+<col width="47%" />
+<col width="40%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Kind</th>
+<th class="head">Assign Location</th>
+<th class="head">Lifecycle Layer (Scope)</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>Hook</td>
+<td><tt class="xref py py-func docutils literal"><span class="pre">before_all()</span></tt></td>
+<td>test run</td>
+</tr>
+<tr class="row-odd"><td>Hook</td>
+<td><tt class="xref py py-func docutils literal"><span class="pre">after_all()</span></tt></td>
+<td>test run</td>
+</tr>
+<tr class="row-even"><td>Hook</td>
+<td><tt class="xref py py-func docutils literal"><span class="pre">before_tags()</span></tt></td>
+<td>feature or scenario</td>
+</tr>
+<tr class="row-odd"><td>Hook</td>
+<td><tt class="xref py py-func docutils literal"><span class="pre">after_tags()</span></tt></td>
+<td>feature or scenario</td>
+</tr>
+<tr class="row-even"><td>Hook</td>
+<td><tt class="xref py py-func docutils literal"><span class="pre">before_feature()</span></tt></td>
+<td>feature</td>
+</tr>
+<tr class="row-odd"><td>Hook</td>
+<td><tt class="xref py py-func docutils literal"><span class="pre">after_feature()</span></tt></td>
+<td>feature</td>
+</tr>
+<tr class="row-even"><td>Hook</td>
+<td><tt class="xref py py-func docutils literal"><span class="pre">before_scenario()</span></tt></td>
+<td>scenario</td>
+</tr>
+<tr class="row-odd"><td>Hook</td>
+<td><tt class="xref py py-func docutils literal"><span class="pre">after_scenario()</span></tt></td>
+<td>scenario</td>
+</tr>
+<tr class="row-even"><td>Hook</td>
+<td><tt class="xref py py-func docutils literal"><span class="pre">before_step()</span></tt></td>
+<td>scenario</td>
+</tr>
+<tr class="row-odd"><td>Hook</td>
+<td><tt class="xref py py-func docutils literal"><span class="pre">after_step()</span></tt></td>
+<td>scenario</td>
+</tr>
+<tr class="row-even"><td>Step</td>
+<td>Step definition</td>
+<td>scenario</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="_static/behave_logo1.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Context Attributes</a><ul>
+<li><a class="reference internal" href="#behave-attributes">Behave Attributes</a></li>
+<li><a class="reference internal" href="#user-attributes">User Attributes</a></li>
+</ul>
+</li>
+</ul>
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  <li><a href="appendix.html">Appendix</a><ul>
+      <li>Previous: <a href="formatters.html" title="previous chapter">Formatters and Reporters</a></li>
+      <li>Next: <a href="parse_builtin_types.html" title="next chapter">Predefined Data Types in <tt class="docutils literal"><span class="pre">parse</span></tt></a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/context_attributes.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy; Copyright 2012-2015, Benno Rice, Richard Jones and Jens Engel.
+    </div>
+    <a href="https://github.com/behave/behave" class="github">
+      <img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/38ef81f8aca64bb9a64448d0d70f1308ef5341ab/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6461726b626c75655f3132313632312e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png">
+    </a>
+  </body>
+</html>

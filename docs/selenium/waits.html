@@ -1,0 +1,217 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>5. Waits &mdash; Selenium Python Bindings 2 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '2',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Selenium Python Bindings 2 documentation" href="index.html" />
+    <link rel="next" title="6. Page Objects" href="page-objects.html" />
+    <link rel="prev" title="4. Locating Elements" href="locating-elements.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="page-objects.html" title="6. Page Objects"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="locating-elements.html" title="4. Locating Elements"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">Selenium Python Bindings 2 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="waits">
+<span id="id1"></span><h1>5. Waits<a class="headerlink" href="#waits" title="Permalink to this headline">¶</a></h1>
+<p>These days most of the web apps are using AJAX techniques.  When a
+page is loaded to browser, the elements within that page may load at
+different time intervals.  This makes locating elements difficult, if
+the element is not present in the DOM, it will raise
+<cite>ElementNotVisibleException</cite> exception.  Using waits, we can solve
+this issue.  Waiting provides some time interval between actions
+performed - mostly locating element or any other operation with the
+element.</p>
+<p>Selenium Webdriver provides two types of waits - implicit &amp; explicit.
+An explicit wait makes WebDriver to wait for a certain condition to
+occur before proceeding further with executions.  An implicit wait
+makes WebDriver to poll the DOM for a certain amount of time when
+trying to locate an element.</p>
+<div class="section" id="explicit-waits">
+<h2>5.1. Explicit Waits<a class="headerlink" href="#explicit-waits" title="Permalink to this headline">¶</a></h2>
+<p>An explicit wait is code you define to wait for a certain condition
+to occur before proceeding further in the code.  The worst case of
+this is time.sleep(), which sets the condition to an exact time period
+to wait.  There are some convenience methods provided that help you
+write code that will wait only as long as required.  WebDriverWait in
+combination with ExpectedCondition is one way this can be
+accomplished.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">selenium</span> <span class="kn">import</span> <span class="n">webdriver</span>
+<span class="kn">from</span> <span class="nn">selenium.webdriver.common.by</span> <span class="kn">import</span> <span class="n">By</span>
+<span class="kn">from</span> <span class="nn">selenium.webdriver.support.ui</span> <span class="kn">import</span> <span class="n">WebDriverWait</span>
+<span class="kn">from</span> <span class="nn">selenium.webdriver.support</span> <span class="kn">import</span> <span class="n">expected_conditions</span> <span class="k">as</span> <span class="n">EC</span>
+
+<span class="n">driver</span> <span class="o">=</span> <span class="n">webdriver</span><span class="o">.</span><span class="n">Firefox</span><span class="p">()</span>
+<span class="n">driver</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;http://somedomain/url_that_delays_loading&quot;</span><span class="p">)</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">element</span> <span class="o">=</span> <span class="n">WebDriverWait</span><span class="p">(</span><span class="n">driver</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span><span class="o">.</span><span class="n">until</span><span class="p">(</span>
+        <span class="n">EC</span><span class="o">.</span><span class="n">presence_of_element_located</span><span class="p">((</span><span class="n">By</span><span class="o">.</span><span class="n">ID</span><span class="p">,</span> <span class="s">&quot;myDynamicElement&quot;</span><span class="p">))</span>
+    <span class="p">)</span>
+<span class="k">finally</span><span class="p">:</span>
+    <span class="n">driver</span><span class="o">.</span><span class="n">quit</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>This waits up to 10 seconds before throwing a TimeoutException or if
+it finds the element will return it in 0 - 10 seconds.  WebDriverWait
+by default calls the ExpectedCondition every 500 milliseconds until it
+returns successfully.  A successful return is for ExpectedCondition
+type is Boolean return true or not null return value for all other
+ExpectedCondition types.</p>
+<p><strong>Expected Conditions</strong></p>
+<p>There are some common conditions that are frequent when
+automating web browsers.  Listed below are Implementations of
+each. Selenium Python binding provides some convienence methods so you
+don&#8217;t have to code an expected_condition class yourself or create your
+own utility package for them.</p>
+<ul class="simple">
+<li>title_is</li>
+<li>title_contains</li>
+<li>presence_of_element_located</li>
+<li>visibility_of_element_located</li>
+<li>visibility_of</li>
+<li>presence_of_all_elements_located</li>
+<li>text_to_be_present_in_element</li>
+<li>text_to_be_present_in_element_value</li>
+<li>frame_to_be_available_and_switch_to_it</li>
+<li>invisibility_of_element_located</li>
+<li>element_to_be_clickable - it is Displayed and Enabled.</li>
+<li>staleness_of</li>
+<li>element_to_be_selected</li>
+<li>element_located_to_be_selected</li>
+<li>element_selection_state_to_be</li>
+<li>element_located_selection_state_to_be</li>
+<li>alert_is_present</li>
+</ul>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">selenium.webdriver.support</span> <span class="kn">import</span> <span class="n">expected_conditions</span> <span class="k">as</span> <span class="n">EC</span>
+
+<span class="n">wait</span> <span class="o">=</span> <span class="n">WebDriverWait</span><span class="p">(</span><span class="n">driver</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+<span class="n">element</span> <span class="o">=</span> <span class="n">wait</span><span class="o">.</span><span class="n">until</span><span class="p">(</span><span class="n">EC</span><span class="o">.</span><span class="n">element_to_be_clickable</span><span class="p">((</span><span class="n">By</span><span class="o">.</span><span class="n">ID</span><span class="p">,</span><span class="s">&#39;someid&#39;</span><span class="p">)))</span>
+</pre></div>
+</div>
+<p>The expected_conditions module contains a set of predefined conditions
+to use with WebDriverWait.</p>
+</div>
+<div class="section" id="implicit-waits">
+<h2>5.2. Implicit Waits<a class="headerlink" href="#implicit-waits" title="Permalink to this headline">¶</a></h2>
+<p>An implicit wait is to tell WebDriver to poll the DOM for a certain
+amount of time when trying to find an element or elements if they are
+not immediately available.  The default setting is 0.  Once set, the
+implicit wait is set for the life of the WebDriver object instance.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">selenium</span> <span class="kn">import</span> <span class="n">webdriver</span>
+
+<span class="n">driver</span> <span class="o">=</span> <span class="n">webdriver</span><span class="o">.</span><span class="n">Firefox</span><span class="p">()</span>
+<span class="n">driver</span><span class="o">.</span><span class="n">implicitly_wait</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span> <span class="c"># seconds</span>
+<span class="n">driver</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;http://somedomain/url_that_delays_loading&quot;</span><span class="p">)</span>
+<span class="n">myDynamicElement</span> <span class="o">=</span> <span class="n">driver</span><span class="o">.</span><span class="n">find_element_by_id</span><span class="p">(</span><span class="s">&quot;myDynamicElement&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">5. Waits</a><ul>
+<li><a class="reference internal" href="#explicit-waits">5.1. Explicit Waits</a></li>
+<li><a class="reference internal" href="#implicit-waits">5.2. Implicit Waits</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="locating-elements.html"
+                        title="previous chapter">4. Locating Elements</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="page-objects.html"
+                        title="next chapter">6. Page Objects</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/waits.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="page-objects.html" title="6. Page Objects"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="locating-elements.html" title="4. Locating Elements"
+             >previous</a> |</li>
+        <li><a href="index.html">Selenium Python Bindings 2 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, Baiju Muthukadan.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>

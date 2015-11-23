@@ -1,0 +1,215 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>1. Installation &mdash; Selenium Python Bindings 2 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '2',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Selenium Python Bindings 2 documentation" href="index.html" />
+    <link rel="next" title="2. Getting Started" href="getting-started.html" />
+    <link rel="prev" title="Selenium with Python" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="getting-started.html" title="2. Getting Started"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Selenium with Python"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">Selenium Python Bindings 2 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="installation">
+<span id="id1"></span><h1>1. Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="introduction">
+<h2>1.1. Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
+<p>Selenium Python bindings provides a simple API to write
+functional/acceptance tests using Selenium WebDriver.  Through
+Selenium Python API you can access all functionalities of Selenium
+WebDriver in an intuitive way.</p>
+<p>Selenium Python bindings provide a convenient API to access Selenium
+WebDrivers like Firefox, Ie, Chrome, Remote etc.  The current supported
+Python versions are 2.7, 3.2, 3.3 and 3.4.</p>
+<p>This documentation explains Selenium 2 WebDriver API.  Selenium
+1 / Selenium RC API is not covered here.</p>
+</div>
+<div class="section" id="downloading-python-bindings-for-selenium">
+<h2>1.2. Downloading Python bindings for Selenium<a class="headerlink" href="#downloading-python-bindings-for-selenium" title="Permalink to this headline">¶</a></h2>
+<p>You can download Python bindings for Selenium from the <a class="reference external" href="http://pypi.python.org/pypi/selenium">PyPI page for
+selenium package</a>.  However,
+a better approach would be to use
+<a class="reference external" href="http://www.pip-installer.org/en/latest/installing.html">pip</a> to
+install the selenium package.  Python 3.4 has pip available in the
+<a class="reference external" href="http://docs.python.org/3.4/installing/index.html">standard library</a>.
+Using <cite>pip</cite>, you can install selenium like this:</p>
+<div class="highlight-python"><div class="highlight"><pre>pip install selenium
+</pre></div>
+</div>
+<p>You may consider using <a class="reference external" href="http://www.virtualenv.org">virtualenv</a>
+to create isolated Python environments.  Python 3.4 has <a class="reference external" href="http://docs.python.org/3.4/using/scripts.html#scripts-pyvenv">pyvenv</a>
+which is almost same as virtualenv.</p>
+</div>
+<div class="section" id="detailed-instructions-for-windows-users">
+<h2>1.3. Detailed instructions for Windows users<a class="headerlink" href="#detailed-instructions-for-windows-users" title="Permalink to this headline">¶</a></h2>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">You should have internet connection to perform this installation.</p>
+</div>
+<ol class="arabic">
+<li><p class="first">Install Python 3.4 using the <a class="reference external" href="http://www.python.org/download">MSI available in python.org download
+page</a>.</p>
+</li>
+<li><p class="first">Start a command prompt using the <tt class="docutils literal"><span class="pre">cmd.exe</span></tt> program and run the
+<tt class="docutils literal"><span class="pre">pip</span></tt> command as given below to install <cite>selenium</cite>.</p>
+<div class="highlight-python"><div class="highlight"><pre>C:\Python34\Scripts\pip.exe install selenium
+</pre></div>
+</div>
+</li>
+</ol>
+<p>Now you can run your test scripts using Python.  For example,
+if you have created a Selenium based script and saved it inside
+<tt class="docutils literal"><span class="pre">C:\my_selenium_script.py</span></tt>, you can run it like this:</p>
+<div class="highlight-python"><div class="highlight"><pre>C:\Python34\python.exe C:\my_selenium_script.py
+</pre></div>
+</div>
+</div>
+<div class="section" id="downloading-selenium-server">
+<h2>1.4. Downloading Selenium server<a class="headerlink" href="#downloading-selenium-server" title="Permalink to this headline">¶</a></h2>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The Selenium server is only required, if you want to use the remote
+WebDriver.  See the <a class="reference internal" href="getting-started.html#selenium-remote-webdriver"><em>Using Selenium with remote WebDriver</em></a> section for
+more details.  If you are a beginner learning Selenium, you can
+skip this section and proceed with next chapter.</p>
+</div>
+<p>Selenium server is a Java program.  Java Runtime Environment (JRE) 1.6
+or newer version is recommended to run Selenium server.</p>
+<p>You can download Selenium server 2.x from the <a class="reference external" href="http://seleniumhq.org/download/">download page of
+selenium website</a>.  The file name
+should be something like this:
+<tt class="docutils literal"><span class="pre">selenium-server-standalone-2.x.x.jar</span></tt>.  You can always download the
+latest 2.x version of Selenium server.</p>
+<p>If Java Runtime Environment (JRE) is not installed in your system, you
+can download the <a class="reference external" href="http://www.oracle.com/technetwork/java/javase/downloads/index.html">JRE from the Oracle website</a>.
+If you are using a GNU/Linux system and have root access in your system,
+you can also use your operating system instructions to install JRE.</p>
+<p>If <cite>java</cite> command is available in the PATH (environment variable),
+you can start the Selenium server using this command:</p>
+<div class="highlight-python"><div class="highlight"><pre>java -jar selenium-server-standalone-2.x.x.jar
+</pre></div>
+</div>
+<p>Replace <cite>2.x.x</cite> with actual version of Selenium server you downloaded
+from the site.</p>
+<p>If JRE is installed as a non-root user and/or if it is
+not available in the PATH (environment variable), you can type the
+relative or absolute path to the <cite>java</cite> command.  Similarly, you can
+provide relative or absolute path to Selenium server jar file.
+Then, the command will look something like this:</p>
+<div class="highlight-python"><div class="highlight"><pre>/path/to/java -jar /path/to/selenium-server-standalone-2.x.x.jar
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">1. Installation</a><ul>
+<li><a class="reference internal" href="#introduction">1.1. Introduction</a></li>
+<li><a class="reference internal" href="#downloading-python-bindings-for-selenium">1.2. Downloading Python bindings for Selenium</a></li>
+<li><a class="reference internal" href="#detailed-instructions-for-windows-users">1.3. Detailed instructions for Windows users</a></li>
+<li><a class="reference internal" href="#downloading-selenium-server">1.4. Downloading Selenium server</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter">Selenium with Python</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="getting-started.html"
+                        title="next chapter">2. Getting Started</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/installation.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="getting-started.html" title="2. Getting Started"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Selenium with Python"
+             >previous</a> |</li>
+        <li><a href="index.html">Selenium Python Bindings 2 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011-2014, Baiju Muthukadan.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>

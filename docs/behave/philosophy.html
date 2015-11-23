@@ -1,0 +1,303 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Behavior Driven Development &mdash; behave 1.2.6.dev0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/flasky.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.2.6.dev0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="behave 1.2.6.dev0 documentation" href="index.html" />
+    <link rel="next" title="Feature Testing Setup" href="gherkin.html" />
+    <link rel="prev" title="Tutorial" href="tutorial.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="gherkin.html" title="Feature Testing Setup"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="tutorial.html" title="Tutorial"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">behave 1.2.6.dev0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="behavior-driven-development">
+<h1>Behavior Driven Development<a class="headerlink" href="#behavior-driven-development" title="Permalink to this headline">¶</a></h1>
+<p>Behavior-driven development (or BDD) is an agile software development
+technique that encourages collaboration between developers, QA and
+non-technical or business participants in a software project. It was
+originally named in 2003 by <a class="reference external" href="http://dannorth.net/introducing-bdd">Dan North</a> as a response to test-driven
+development (TDD), including acceptance test or customer test driven
+development practices as found in extreme programming. It has <a class="reference external" href="https://forums.pragprog.com/forums/95/topics/3035">evolved over
+the last few years</a>.</p>
+<p>On the &#8220;Agile specifications, BDD and Testing eXchange&#8221; in November 2009 in
+London, Dan North <a class="reference external" href="https://skillsmatter.com/skillscasts/923-how-to-sell-bdd-to-the-business">gave the following definition of BDD</a>:</p>
+<blockquote>
+<div>BDD is a second-generation, outside–in, pull-based, multiple-stakeholder,
+multiple-scale, high-automation, agile methodology. It describes a cycle
+of interactions with well-defined outputs, resulting in the delivery of
+working, tested software that matters.</div></blockquote>
+<p>BDD focuses on obtaining a clear understanding of desired software behavior
+through discussion with stakeholders. It extends TDD by writing test cases
+in a natural language that non-programmers can read. Behavior-driven
+developers use their native language in combination with the ubiquitous
+language of domain-driven design to describe the purpose and benefit of
+their code. This allows the developers to focus on why the code should be
+created, rather than the technical details, and minimizes translation
+between the technical language in which the code is written and the domain
+language spoken by the business, users, stakeholders, project management,
+etc.</p>
+<div class="section" id="bdd-practices">
+<h2>BDD practices<a class="headerlink" href="#bdd-practices" title="Permalink to this headline">¶</a></h2>
+<p>The practices of BDD include:</p>
+<ul class="simple">
+<li>Establishing the goals of different stakeholders required for a vision to
+be implemented</li>
+<li>Drawing out features which will achieve those goals using feature
+injection</li>
+<li>Involving stakeholders in the implementation process through outside–in
+software development</li>
+<li>Using examples to describe the behavior of the application, or of units
+of code</li>
+<li>Automating those examples to provide quick feedback and regression
+testing</li>
+<li>Using &#8216;should&#8217; when describing the behavior of software to help clarify
+responsibility and allow the software&#8217;s functionality to be questioned</li>
+<li>Using &#8216;ensure&#8217; when describing responsibilities of software to
+differentiate outcomes in the scope of the code in question from
+side-effects of other elements of code.</li>
+<li>Using mocks to stand-in for collaborating modules of code which have not
+yet been written</li>
+</ul>
+</div>
+<div class="section" id="outsidein">
+<h2>Outside–in<a class="headerlink" href="#outsidein" title="Permalink to this headline">¶</a></h2>
+<p>BDD is driven by <a class="reference external" href="http://lizkeogh.com/2007/06/13/bdd-tdd-done-well/">business value</a>; that is, the benefit to the business
+which accrues once the application is in production. The only way in which
+this benefit can be realized is through the user interface(s) to the
+application, usually (but not always) a GUI.</p>
+<p>In the same way, each piece of code, starting with the UI, can be
+considered a stakeholder of the other modules of code which it uses. Each
+element of code provides some aspect of behavior which, in collaboration
+with the other elements, provides the application behavior.</p>
+<p>The first piece of production code that BDD developers implement is the UI.
+Developers can then benefit from quick feedback as to whether the UI looks
+and behaves appropriately. Through code, and using principles of good
+design and refactoring, developers discover collaborators of the UI, and of
+every unit of code thereafter. This helps them adhere to the principle of
+YAGNI, since each piece of production code is required either by the
+business, or by another piece of code already written.</p>
+</div>
+<div class="section" id="the-gherkin-language">
+<h2>The Gherkin language<a class="headerlink" href="#the-gherkin-language" title="Permalink to this headline">¶</a></h2>
+<p>The requirements of a retail application might be, &#8220;Refunded or exchanged
+items should be returned to stock.&#8221; In BDD, a developer or QA engineer
+might clarify the requirements by breaking this down into specific
+examples. The language of the examples below is called Gherkin and is used
+<em>behave</em> as well as many other tools.</p>
+<div class="highlight-gherkin"><div class="highlight"><pre><span class="k">Scenario:</span><span class="nf"> Refunded items should be returned to stock</span>
+<span class="k">  Given </span><span class="nf">a customer previously bought a black sweater from me</span>
+<span class="nf">    and I currently have three black sweaters left in stock.</span>
+<span class="nf">   </span><span class="k">When </span><span class="nf">he returns the sweater for a refund</span>
+<span class="nf">   then I should have four black sweaters in stock.,</span>
+
+<span class="k">Scenario:</span><span class="nf"> Replaced items should be returned to stock</span>
+<span class="k">  Given </span><span class="nf">that a customer buys a blue garment</span>
+<span class="nf">    and I have two blue garments in stock</span>
+<span class="nf">    and three black garments in stock.</span>
+<span class="nf">   </span><span class="k">When </span><span class="nf">he returns the garment for a replacement in black,</span>
+<span class="nf">   then I should have three blue garments in stock</span>
+<span class="nf">    and two black garments in stock.</span>
+</pre></div>
+</div>
+<p>Each scenario is an exemplar, designed to illustrate a specific aspect of behavior of the application.</p>
+<p>When discussing the scenarios, participants question whether the outcomes
+described always result from those events occurring in the given context.
+This can <a class="reference external" href="http://dannorth.net/whats-in-a-story">help to uncover further scenarios which clarify the
+requirements</a>. For instance, a domain expert noticing that refunded items
+are not always returned to stock might reword the requirements as &#8220;Refunded
+or replaced items should be returned to stock, unless faulty.&#8221;.</p>
+<p>This in turn helps participants to pin down the scope of requirements,
+which leads to better estimates of how long those requirements will take to
+implement.</p>
+<p>The words Given, When and Then are often used to help drive out the
+scenarios, but are not mandated.</p>
+<p>These scenarios can also be automated, if an appropriate tool exists to
+allow automation at the UI level. If no such tool exists then it may be
+possible to automate at the next level in, i.e.: if an MVC design pattern
+has been used, the level of the Controller.</p>
+</div>
+<div class="section" id="programmer-domain-examples-and-behavior">
+<h2>Programmer-domain examples and behavior<a class="headerlink" href="#programmer-domain-examples-and-behavior" title="Permalink to this headline">¶</a></h2>
+<p>The same principles of examples, using contexts, events and outcomes are
+used to drive development at the level of abstraction of the programmer, as
+opposed to the business level. For instance, the following examples
+describe an aspect of behavior of a list:</p>
+<div class="highlight-gherkin"><div class="highlight"><pre><span class="k">Scenario:</span><span class="nf"> New lists are empty</span>
+<span class="k">  Given </span><span class="nf">a new list</span>
+<span class="nf">   then the list should be empty.</span>
+
+<span class="k">Scenario:</span><span class="nf"> Lists with things in them are not empty.</span>
+<span class="k">  Given </span><span class="nf">a new list</span>
+<span class="nf">   when we add an object</span>
+<span class="nf">   then the list should not be empty.</span>
+</pre></div>
+</div>
+<p>Both these examples are required to describe the boolean nature of a list
+in Python and to derive the benefit of the nature. These examples are
+usually automated using TDD frameworks. In BDD these examples are often
+encapsulated in a single method, with the name of the method being a
+complete description of the behavior. Both examples are required for the
+code to be valuable, and encapsulating them in this way makes it easy to
+question, remove or change the behavior.</p>
+<p>For instance as unit tests, the above examples might become:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">TestList</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+   <span class="k">def</span> <span class="nf">test_empty_list_is_false</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+       <span class="nb">list</span> <span class="o">=</span> <span class="p">[]</span>
+       <span class="n">assertEqual</span><span class="p">(</span><span class="nb">bool</span><span class="p">(</span><span class="nb">list</span><span class="p">),</span> <span class="bp">False</span><span class="p">)</span>
+
+   <span class="k">def</span> <span class="nf">test_populated_list_is_true</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+       <span class="nb">list</span> <span class="o">=</span> <span class="p">[]</span>
+       <span class="nb">list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s">&#39;item&#39;</span><span class="p">)</span>
+       <span class="n">assertEqual</span><span class="p">(</span><span class="nb">bool</span><span class="p">(</span><span class="nb">list</span><span class="p">),</span> <span class="bp">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Sometimes the difference between the context, events and outcomes is made more explicit. For instance:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">TestWindow</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+   <span class="k">def</span> <span class="nf">test_window_close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+       <span class="c"># given</span>
+       <span class="n">window</span> <span class="o">=</span> <span class="n">gui</span><span class="o">.</span><span class="n">Window</span><span class="p">(</span><span class="s">&quot;My Window&quot;</span><span class="p">)</span>
+       <span class="n">frame</span> <span class="o">=</span> <span class="n">gui</span><span class="o">.</span><span class="n">Frame</span><span class="p">(</span><span class="n">window</span><span class="p">)</span>
+
+       <span class="c"># When</span>
+       <span class="n">window</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+       <span class="c"># Then</span>
+       <span class="n">assert_</span><span class="p">(</span><span class="ow">not</span> <span class="n">frame</span><span class="o">.</span><span class="n">isVisible</span><span class="p">())</span>
+</pre></div>
+</div>
+<p>However the example is phrased, the effect describes the behavior of the
+code in question. For instance, from the examples above one can derive:</p>
+<ul class="simple">
+<li>lists should know when they are empty</li>
+<li>window.close() should cause contents to stop being visible</li>
+</ul>
+<p>The description is intended to be useful if the test fails, and to provide
+documentation of the code&#8217;s behavior. Once the examples have been written
+they are then run and the code implemented to make them work in the same
+way as TDD. The examples then become part of the suite of regression tests.</p>
+</div>
+<div class="section" id="using-mocks">
+<h2>Using mocks<a class="headerlink" href="#using-mocks" title="Permalink to this headline">¶</a></h2>
+<p>BDD proponents claim that the use of &#8220;should&#8221; and &#8220;ensureThat&#8221; in BDD
+examples encourages developers to question whether the responsibilities
+they&#8217;re assigning to their classes are appropriate, or whether they can be
+delegated or moved to another class entirely. Practitioners use an object
+which is simpler than the collaborating code, and provides the same
+interface but more predictable behavior. This is injected into the code
+which needs it, and examples of that code&#8217;s behavior are written using this
+object instead of the production version.</p>
+<p>These objects can either be created by hand, or created using a
+mocking framework such as <a class="reference external" href="https://pypi.python.org/pypi/mock">mock</a>.</p>
+<p>Questioning responsibilities in this way, and using mocks to fulfill the
+required roles of collaborating classes, encourages the use of Role-based
+Interfaces. It also helps to keep the classes small and loosely coupled.</p>
+</div>
+<div class="section" id="acknowledgement">
+<h2>Acknowledgement<a class="headerlink" href="#acknowledgement" title="Permalink to this headline">¶</a></h2>
+<p>This text is partially taken from the wikipedia text on <a class="reference external" href="http://en.wikipedia.org/wiki/Behavior_Driven_Development">Behavior Driven
+Development</a> with modifications where appropriate to be more specific to
+<em>behave</em> and Python.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="_static/behave_logo1.png" alt="Logo"/>
+            </a></p>
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Behavior Driven Development</a><ul>
+<li><a class="reference internal" href="#bdd-practices">BDD practices</a></li>
+<li><a class="reference internal" href="#outsidein">Outside–in</a></li>
+<li><a class="reference internal" href="#the-gherkin-language">The Gherkin language</a></li>
+<li><a class="reference internal" href="#programmer-domain-examples-and-behavior">Programmer-domain examples and behavior</a></li>
+<li><a class="reference internal" href="#using-mocks">Using mocks</a></li>
+<li><a class="reference internal" href="#acknowledgement">Acknowledgement</a></li>
+</ul>
+</li>
+</ul>
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="tutorial.html" title="previous chapter">Tutorial</a></li>
+      <li>Next: <a href="gherkin.html" title="next chapter">Feature Testing Setup</a></li>
+  </ul></li>
+</ul>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/philosophy.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy; Copyright 2012-2015, Benno Rice, Richard Jones and Jens Engel.
+    </div>
+    <a href="https://github.com/behave/behave" class="github">
+      <img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/38ef81f8aca64bb9a64448d0d70f1308ef5341ab/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6461726b626c75655f3132313632312e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png">
+    </a>
+  </body>
+</html>

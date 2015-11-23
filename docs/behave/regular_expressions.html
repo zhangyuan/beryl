@@ -1,0 +1,245 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Regular Expressions &mdash; behave 1.2.6.dev0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/flasky.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.2.6.dev0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="behave 1.2.6.dev0 documentation" href="index.html" />
+    <link rel="up" title="Appendix" href="appendix.html" />
+    <link rel="next" title="Testing Domains" href="test_domains.html" />
+    <link rel="prev" title="Predefined Data Types in parse" href="parse_builtin_types.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="test_domains.html" title="Testing Domains"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="parse_builtin_types.html" title="Predefined Data Types in parse"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">behave 1.2.6.dev0 documentation</a> &raquo;</li>
+          <li><a href="appendix.html" accesskey="U">Appendix</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="regular-expressions">
+<span id="id-appendix-regular-expressions"></span><h1>Regular Expressions<a class="headerlink" href="#regular-expressions" title="Permalink to this headline">¶</a></h1>
+<p id="index-0">The following tables provide a overview of the <a class="reference external" href="http://en.wikipedia.org/wiki/Regular_expression">regular expressions</a> syntax.
+See also <a class="reference external" href="https://docs.python.org/2/library/re.html#module-re">Python regular expressions</a> description in the Python <a class="reference external" href="https://docs.python.org/2/library/re.html#module-re">re module</a>.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="27%" />
+<col width="73%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Special Characters</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><tt class="docutils literal"><span class="pre">.</span></tt></td>
+<td>Matches any character (dot).</td>
+</tr>
+<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">^</span></tt></td>
+<td>&#8220;^...&#8221;, matches start-of-string (caret).</td>
+</tr>
+<tr class="row-even"><td><tt class="docutils literal"><span class="pre">$</span></tt></td>
+<td>&#8221;...$&#8221;, matches end-of-string (dollar sign).</td>
+</tr>
+<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">|</span></tt></td>
+<td>&#8220;A|B&#8221;, matches &#8220;A&#8221; or &#8220;B&#8221;.</td>
+</tr>
+<tr class="row-even"><td><tt class="docutils literal"><span class="pre">\</span></tt></td>
+<td>Escape character.</td>
+</tr>
+<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">\.</span></tt></td>
+<td>EXAMPLE: Matches character &#8216;.&#8217; (dot).</td>
+</tr>
+<tr class="row-even"><td><tt class="docutils literal"><span class="pre">\\</span></tt></td>
+<td>EXAMPLE: Matches character &#8216;<tt class="docutils literal"><span class="pre">\</span></tt>&#8216; (backslash).</td>
+</tr>
+</tbody>
+</table>
+<p>To select or match characters from a special set of characters,
+a character set must be defined.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="27%" />
+<col width="73%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Character sets</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><tt class="docutils literal"><span class="pre">[...]</span></tt></td>
+<td>Define a character set, like <tt class="docutils literal"><span class="pre">[A-Za-z]</span></tt>.</td>
+</tr>
+<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">\d</span></tt></td>
+<td>Matches digit character: [0-9]</td>
+</tr>
+<tr class="row-even"><td><tt class="docutils literal"><span class="pre">\D</span></tt></td>
+<td>Matches non-digit character.</td>
+</tr>
+<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">\s</span></tt></td>
+<td>Matches whitespace character: <tt class="docutils literal"><span class="pre">[</span> <span class="pre">\t\n\r\f\v]</span></tt></td>
+</tr>
+<tr class="row-even"><td><tt class="docutils literal"><span class="pre">\S</span></tt></td>
+<td>Matches non-whitespace character</td>
+</tr>
+<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">\w</span></tt></td>
+<td>Matches alphanumeric character: <tt class="docutils literal"><span class="pre">[a-zA-Z0-9_]</span></tt></td>
+</tr>
+<tr class="row-even"><td><tt class="docutils literal"><span class="pre">\W</span></tt></td>
+<td>Matches non-alphanumeric character.</td>
+</tr>
+</tbody>
+</table>
+<p>A text part must be group to extract it as part (parameter).</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="27%" />
+<col width="73%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Grouping</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><tt class="docutils literal"><span class="pre">(...)</span></tt></td>
+<td>Group a regular expression pattern (anonymous group).</td>
+</tr>
+<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">\number</span></tt></td>
+<td>Matches text of earlier group by index, like: &#8220;<tt class="docutils literal"><span class="pre">\1</span></tt>&#8221;.</td>
+</tr>
+<tr class="row-even"><td><tt class="docutils literal"><span class="pre">(?P&lt;name&gt;...)</span></tt></td>
+<td>Matches pattern and stores it in parameter &#8220;name&#8221;.</td>
+</tr>
+<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">(?P=name)</span></tt></td>
+<td>Match whatever text was matched by earlier group &#8220;name&#8221;.</td>
+</tr>
+<tr class="row-even"><td><tt class="docutils literal"><span class="pre">(?:...)</span></tt></td>
+<td>Matches pattern, but does non capture any text.</td>
+</tr>
+<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">(?#...)</span></tt></td>
+<td>Comment (is ignored), describes pattern details.</td>
+</tr>
+</tbody>
+</table>
+<p>If a <em>group</em>, <em>character</em> or <em>character set</em> should be repeated several times,
+it is necessary to specify the cardinality of the regular expression pattern.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="25%" />
+<col width="75%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Cardinality</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><tt class="docutils literal"><span class="pre">?</span></tt></td>
+<td>Pattern with cardinality 0..1: optional part (question mark).</td>
+</tr>
+<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">*</span></tt></td>
+<td>Pattern with cardinality zero or more, 0.. (asterisk).</td>
+</tr>
+<tr class="row-even"><td><tt class="docutils literal"><span class="pre">+</span></tt></td>
+<td>Pattern with cardinality one or more, 1.. (plus sign).</td>
+</tr>
+<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">{m}</span></tt></td>
+<td>Matches <tt class="docutils literal"><span class="pre">m</span></tt> repetitions of a pattern.</td>
+</tr>
+<tr class="row-even"><td><tt class="docutils literal"><span class="pre">{m,n}</span></tt></td>
+<td>Matches from <tt class="docutils literal"><span class="pre">m</span></tt> to <tt class="docutils literal"><span class="pre">n</span></tt> repetitions of a pattern.</td>
+</tr>
+<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">[A-Za-z]+</span></tt></td>
+<td>EXAMPLE: Matches one or more alphabetical characters.</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="_static/behave_logo1.png" alt="Logo"/>
+            </a></p><h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  <li><a href="appendix.html">Appendix</a><ul>
+      <li>Previous: <a href="parse_builtin_types.html" title="previous chapter">Predefined Data Types in <tt class="docutils literal"><span class="pre">parse</span></tt></a></li>
+      <li>Next: <a href="test_domains.html" title="next chapter">Testing Domains</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/regular_expressions.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy; Copyright 2012-2015, Benno Rice, Richard Jones and Jens Engel.
+    </div>
+    <a href="https://github.com/behave/behave" class="github">
+      <img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/38ef81f8aca64bb9a64448d0d70f1308ef5341ab/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6461726b626c75655f3132313632312e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png">
+    </a>
+  </body>
+</html>

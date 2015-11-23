@@ -1,0 +1,229 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Predefined Data Types in parse &mdash; behave 1.2.6.dev0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/flasky.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.2.6.dev0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="behave 1.2.6.dev0 documentation" href="index.html" />
+    <link rel="up" title="Appendix" href="appendix.html" />
+    <link rel="next" title="Regular Expressions" href="regular_expressions.html" />
+    <link rel="prev" title="Context Attributes" href="context_attributes.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="regular_expressions.html" title="Regular Expressions"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="context_attributes.html" title="Context Attributes"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">behave 1.2.6.dev0 documentation</a> &raquo;</li>
+          <li><a href="appendix.html" accesskey="U">Appendix</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="predefined-data-types-in-parse">
+<span id="id-appendix-parse-builtin-types"></span><h1>Predefined Data Types in <tt class="docutils literal"><span class="pre">parse</span></tt><a class="headerlink" href="#predefined-data-types-in-parse" title="Permalink to this headline">¶</a></h1>
+<p><a class="reference external" href="https://pypi.python.org/pypi/behave">behave</a> uses the <a class="reference external" href="https://pypi.python.org/pypi/parse">parse</a> module (inverse of Python <a class="reference external" href="https://docs.python.org/2/library/string.html#format-string-syntax">string.format</a>)
+under the hoods to parse parameters in step definitions.
+This leads to rather simple and readable parse expressions for step parameters.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># -- FILE: features/steps/type_transform_example_steps.py</span>
+<span class="kn">from</span> <span class="nn">behave</span> <span class="kn">import</span> <span class="n">given</span>
+
+<span class="nd">@given</span><span class="p">(</span><span class="s">&#39;I have {number:d} friends&#39;</span><span class="p">)</span>  <span class="c">#&lt; Convert &#39;number&#39; into int type.</span>
+<span class="k">def</span> <span class="nf">step_given_i_have_number_friends</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">number</span><span class="p">):</span>
+    <span class="k">assert</span> <span class="n">number</span> <span class="o">&gt;</span> <span class="mi">0</span>
+    <span class="o">...</span>
+</pre></div>
+</div>
+<p>Therefore, the following <tt class="docutils literal"><span class="pre">parse</span> <span class="pre">types</span></tt> are already supported
+in step definitions without registration of any <em>user-defined type</em>:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="8%" />
+<col width="72%" />
+<col width="20%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Type</th>
+<th class="head">Characters Matched</th>
+<th class="head">Output Type</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>w</td>
+<td>Letters and underscore</td>
+<td>str</td>
+</tr>
+<tr class="row-odd"><td>W</td>
+<td>Non-letter and underscore</td>
+<td>str</td>
+</tr>
+<tr class="row-even"><td>s</td>
+<td>Whitespace</td>
+<td>str</td>
+</tr>
+<tr class="row-odd"><td>S</td>
+<td>Non-whitespace</td>
+<td>str</td>
+</tr>
+<tr class="row-even"><td>d</td>
+<td>Digits (effectively integer numbers)</td>
+<td>int</td>
+</tr>
+<tr class="row-odd"><td>D</td>
+<td>Non-digit</td>
+<td>str</td>
+</tr>
+<tr class="row-even"><td>n</td>
+<td>Numbers with thousands separators (, or .)</td>
+<td>int</td>
+</tr>
+<tr class="row-odd"><td>%</td>
+<td>Percentage (converted to value/100.0)</td>
+<td>float</td>
+</tr>
+<tr class="row-even"><td>f</td>
+<td>Fixed-point numbers</td>
+<td>float</td>
+</tr>
+<tr class="row-odd"><td>e</td>
+<td>Floating-point numbers with exponent
+e.g. 1.1e-10, NAN (all case insensitive)</td>
+<td>float</td>
+</tr>
+<tr class="row-even"><td>g</td>
+<td>General number format (either d, f or e)</td>
+<td>float</td>
+</tr>
+<tr class="row-odd"><td>b</td>
+<td>Binary numbers</td>
+<td>int</td>
+</tr>
+<tr class="row-even"><td>o</td>
+<td>Octal numbers</td>
+<td>int</td>
+</tr>
+<tr class="row-odd"><td>x</td>
+<td>Hexadecimal numbers (lower and upper case)</td>
+<td>int</td>
+</tr>
+<tr class="row-even"><td>ti</td>
+<td>ISO 8601 format date/time
+e.g. 1972-01-20T10:21:36Z</td>
+<td>datetime</td>
+</tr>
+<tr class="row-odd"><td>te</td>
+<td>RFC2822 e-mail format date/time
+e.g. Mon, 20 Jan 1972 10:21:36 +1000</td>
+<td>datetime</td>
+</tr>
+<tr class="row-even"><td>tg</td>
+<td>Global (day/month) format date/time
+e.g. 20/1/1972 10:21:36 AM +1:00</td>
+<td>datetime</td>
+</tr>
+<tr class="row-odd"><td>ta</td>
+<td>US (month/day) format date/time
+e.g. 1/20/1972 10:21:36 PM +10:30</td>
+<td>datetime</td>
+</tr>
+<tr class="row-even"><td>tc</td>
+<td>ctime() format date/time
+e.g. Sun Sep 16 01:03:52 1973</td>
+<td>datetime</td>
+</tr>
+<tr class="row-odd"><td>th</td>
+<td>HTTP log format date/time
+e.g. 21/Nov/2011:00:07:11 +0000</td>
+<td>datetime</td>
+</tr>
+<tr class="row-even"><td>tt</td>
+<td>Time
+e.g. 10:21:36 PM -5:30</td>
+<td>time</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="_static/behave_logo1.png" alt="Logo"/>
+            </a></p><h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  <li><a href="appendix.html">Appendix</a><ul>
+      <li>Previous: <a href="context_attributes.html" title="previous chapter">Context Attributes</a></li>
+      <li>Next: <a href="regular_expressions.html" title="next chapter">Regular Expressions</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/parse_builtin_types.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy; Copyright 2012-2015, Benno Rice, Richard Jones and Jens Engel.
+    </div>
+    <a href="https://github.com/behave/behave" class="github">
+      <img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/38ef81f8aca64bb9a64448d0d70f1308ef5341ab/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6461726b626c75655f3132313632312e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png">
+    </a>
+  </body>
+</html>
