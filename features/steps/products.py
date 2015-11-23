@@ -3,10 +3,11 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from nose.tools import *
 import helper
+import settings
 
 @given("Open products page")
 def open_products_page(context):
-  context.driver.get("http://127.0.0.1:8000/")
+  context.driver.get(settings.products_url)
 
 
 @when('search by keyword "{keyword}"')
