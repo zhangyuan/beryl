@@ -1,6 +1,6 @@
 import os
 
-app_env = os.environ['APP_ENV']
+app_env = os.environ.get('APP_ENV')
 
 if app_env == None:
   app_env = "dev"
